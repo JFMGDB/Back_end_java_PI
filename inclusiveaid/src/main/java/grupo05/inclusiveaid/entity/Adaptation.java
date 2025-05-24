@@ -1,15 +1,16 @@
-package grupo05.inclusiveaid.model;
+package grupo05.inclusiveaid.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "layout_elements")
+@Table(name = "adaptations")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class LayoutElement {
+public class Adaptation {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String elementType;
+  private String name;
   private String description;
-  private String xpath;
+  @ManyToOne @JoinColumn(name="disability_type_id")
+  private DisabilityType disabilityType;
 }

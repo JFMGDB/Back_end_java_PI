@@ -1,6 +1,6 @@
 package grupo05.inclusiveaid.security;
 
-import com.company.aid.service.impl.AuthServiceImpl;
+import grupo05.inclusiveaid.service.impl.AuthServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,6 +11,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -18,7 +20,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final AuthServiceImpl authService;
 
   @Override
-  protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+  protected void doFilterInternal(
+      @org.springframework.lang.NonNull HttpServletRequest req,
+      @org.springframework.lang.NonNull HttpServletResponse res,
+      @org.springframework.lang.NonNull FilterChain chain)
       throws java.io.IOException, jakarta.servlet.ServletException {
     final var authHeader = req.getHeader("Authorization");
     String username = null, token = null;

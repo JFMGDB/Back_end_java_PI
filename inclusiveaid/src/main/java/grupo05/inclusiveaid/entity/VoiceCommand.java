@@ -1,4 +1,4 @@
-package grupo05.inclusiveaid.model;
+package grupo05.inclusiveaid.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

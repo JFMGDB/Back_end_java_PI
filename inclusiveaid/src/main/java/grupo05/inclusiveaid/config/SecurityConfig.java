@@ -1,7 +1,7 @@
-package com.company.aid.config;
+package grupo05.inclusiveaid.config;
 
-import com.company.aid.security.JwtAuthenticationFilter;
-import com.company.aid.service.impl.AuthServiceImpl;
+import grupo05.inclusiveaid.security.JwtAuthenticationFilter;
+import grupo05.inclusiveaid.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,18 +20,19 @@ public class SecurityConfig {
   private final AuthServiceImpl authService;
   private final JwtAuthenticationFilter jwtFilter;
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf().disable()
-      .authorizeHttpRequests(a -> a
-        .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-        .anyRequest().authenticated()
-      )
-      .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .authenticationProvider(authService.authenticationProvider())
-      .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+ @Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(a -> a
+            .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+            .anyRequest().authenticated()
+        )
+        .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authenticationProvider(authService.authenticationProvider())
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
-  }
+}
 
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {

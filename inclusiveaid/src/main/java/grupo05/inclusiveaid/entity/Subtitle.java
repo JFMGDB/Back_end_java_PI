@@ -1,17 +1,17 @@
-package grupo05.inclusiveaid.model;
+package grupo05.inclusiveaid.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "sessions")
+@Table(name = "subtitles")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class Session {
+public class Subtitle {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @ManyToOne @JoinColumn(name="user_id")
-  private User user;
-  private Instant startedAt;
-  private Instant endedAt;
+  @ManyToOne @JoinColumn(name="session_id")
+  private Session session;
+  private String text;
+  private Instant timestamp;
 }

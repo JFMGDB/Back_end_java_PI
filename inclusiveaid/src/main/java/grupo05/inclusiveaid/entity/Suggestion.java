@@ -1,17 +1,15 @@
-package grupo05.inclusiveaid.model;
+package grupo05.inclusiveaid.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.Instant;
 
 @Entity
-@Table(name = "feedbacks")
+@Table(name = "suggestions")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class Feedback {
+public class Suggestion {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @ManyToOne @JoinColumn(name="user_id")
-  private User user;
+  @ManyToOne @JoinColumn(name="layout_analysis_id")
+  private LayoutAnalysis analysis;
   private String message;
-  private Instant timestamp;
 }

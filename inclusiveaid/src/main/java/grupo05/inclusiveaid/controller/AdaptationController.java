@@ -1,41 +1,44 @@
 package grupo05.inclusiveaid.controller;
 
-import grupo05.inclusiveaid.dto.UserDTO;
-import grupo05.inclusiveaid.service.UserService;
+import grupo05.inclusiveaid.dto.AdaptationDTO;
+import grupo05.inclusiveaid.service.AdaptationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Endpoints CRUD para Adaptation.
+ */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/adaptations")
 @RequiredArgsConstructor
-public class UserController {
-  private final UserService svc;
+public class AdaptationController {
+  private final AdaptationService svc;
 
   @PostMapping
-  public ResponseEntity<UserDTO> create(
-      @RequestBody @Validated(UserDTO.Create.class) UserDTO dto) {
+  public ResponseEntity<AdaptationDTO> create(
+    @Validated(AdaptationDTO.Create.class) @RequestBody AdaptationDTO dto) {
     return ResponseEntity.ok(svc.create(dto));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<UserDTO> get(@PathVariable Long id) {
+  public ResponseEntity<AdaptationDTO> get(@PathVariable Long id) {
     return ResponseEntity.ok(svc.getById(id));
   }
 
   @GetMapping
-  public ResponseEntity<Page<UserDTO>> list(
-      @RequestParam(defaultValue="0") int page,
-      @RequestParam(defaultValue="10") int size) {
+  public ResponseEntity<Page<AdaptationDTO>> list(
+    @RequestParam(defaultValue="0") int page,
+    @RequestParam(defaultValue="10") int size) {
     return ResponseEntity.ok(svc.listAll(page,size));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<UserDTO> update(
-      @PathVariable Long id,
-      @RequestBody @Validated(UserDTO.Update.class) UserDTO dto) {
+  public ResponseEntity<AdaptationDTO> update(
+    @PathVariable Long id,
+    @Validated(AdaptationDTO.Update.class) @RequestBody AdaptationDTO dto) {
     return ResponseEntity.ok(svc.update(id,dto));
   }
 
