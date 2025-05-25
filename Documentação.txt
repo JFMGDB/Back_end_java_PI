@@ -1,0 +1,112 @@
+InclusiveAID Backend
+
+API RESTful em Java 21 + Spring Boot 3 para o Assistente de Inclusão Digital.
+Fornece autenticação JWT, CRUD para usuários, tipos de deficiência, adaptações, sessões, análises de layout, sugestões, legendas e comandos de voz.
+
+Requisitos:
+- JDK 21.0.7
+- Maven 3.6+
+- (Opcional) IDE Java (IntelliJ, VSCode…)
+
+Setup:
+
+1. Clone o repositório
+   git clone https://seu-repositorio.git
+   cd aid-backend
+
+2. (Opcional) Configure variáveis de ambiente
+   APP_JWT_VALIDITY – validade do token em ms (default: 3600000)
+
+3. Compile e instale dependências
+   mvn clean install
+
+4. Executando
+   mvn spring-boot:run
+
+API disponível em http://localhost:8080
+
+H2 Console (em memória) em http://localhost:8080/h2-console
+JDBC URL: jdbc:h2:mem:aiddb
+Usuário: sa
+Senha: (em branco)
+
+Estrutura de Pastas:
+src/
+ ├─ main/
+ │   ├── java/com/company/aid/
+ │   │   ├── config/             CORS, Security, Swagger
+ │   │   ├── security/           JWT util, filtro
+ │   │   ├── entity/             JPA Entities
+ │   │   ├── repository/         JpaRepository interfaces
+ │   │   ├── dto/                Data Transfer Objects
+ │   │   ├── mapper/             MapStruct interfaces
+ │   │   ├── service/            Service interfaces
+ │   │   ├── service/impl/       Implementações CRUD
+ │   │   ├── controller/         REST controllers
+ │   │   └── exception/          Tratamento global de erros
+ │   └── resources/
+ │       ├── application.properties
+ │       ├── schema.sql
+ │       └── data.sql
+ └─ test/                         Testes de contexto
+
+Autenticação JWT
+
+Login:
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@ex.com",
+  "password": "senha123"
+}
+
+→ 200 OK com body:
+{ "token": "<JWT>" }
+
+Usar token:
+Em todas as rotas protegidas, adicionar header:
+Authorization: Bearer <JWT>
+
+Swagger / OpenAPI:
+Abra http://localhost:8080/swagger-ui/index.html
+Clique em Authorize e cole:
+Bearer <JWT>
+para testar rotas protegidas.
+
+Endpoints Principais:
+
+Recurso            Método   Caminho                                   Descrição
+Auth               POST     /api/auth/login                           Gera JWT a partir de email+senha
+Users              GET      /api/users                                Lista usuários (paginado)
+                   POST     /api/users                                Cria novo usuário
+                   GET      /api/users/{id}                           Busca usuário por ID
+                   PUT      /api/users/{id}                           Atualiza usuário
+                   DELETE   /api/users/{id}                           Remove usuário
+DisabilityTypes    …        /api/disability-types/**                  CRUD tipos de deficiência
+Adaptations        …        /api/adaptations/**                       CRUD adaptações
+Feedbacks          …        /api/feedbacks/**                         CRUD feedbacks
+Sessions           …        /api/sessions/**                          CRUD sessões
+LayoutAnalyses     …        /api/layout-analyses/**                   CRUD análises de layout
+Suggestions        …        /api/suggestions/**                       CRUD sugestões proativas
+Subtitles          …        /api/subtitles/**                         CRUD legendas em tempo real
+VoiceCommands      …        /api/voice-commands/**                   CRUD comandos de voz
+
+Para cada recurso, o padrão é:
+GET    /              — lista (query params: page, size)
+POST   /              — cria (JSON body)
+GET    /{id}          — busca
+PUT    /{id}          — atualiza
+DELETE /{id}          — deleta
+
+Exemplos cURL:
+
+# 1. Login
+TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"admin@ex.com","password":"senha123"}' \
+  | jq -r .token)
+
+# 2. Listar usuários
+curl -X GET http://localhost:8080/api/users?page=0&size=5 \
+  -H "Authorization: Bearer $TOKEN"
