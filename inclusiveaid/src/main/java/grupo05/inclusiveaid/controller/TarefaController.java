@@ -1,31 +1,51 @@
-package com.seuusuario.seuprojeto.controller;
+package grupo05.inclusiveaid.controller;
 
-import com.seuusuario.seuprojeto.model.Tarefa;
-import com.seuusuario.seuprojeto.repository.TarefaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import grupo05.inclusiveaid.entity.Tarefa;
+import grupo05.inclusiveaid.service.TarefaService;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
-@RequestMapping("/tarefa")
+@RequestMapping("/api/tarefa")
+@RequiredArgsConstructor
 public class TarefaController {
-
-    @Autowired
-    private TarefaRepository tarefaRepository;
-
-    @GetMapping
-    public List<Tarefa> listar() {
-        return tarefaRepository.findAll();
-    }
+    private final TarefaService tarefaService;
 
     @PostMapping
-    public Tarefa salvar(@RequestBody Tarefa tarefa) {
-        return tarefaRepository.save(tarefa);
+    public ResponseEntity<Tarefa> createTarefa(@RequestBody Tarefa tarefa) {
+        return ResponseEntity.ok(tarefaService.createTarefa(tarefa));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Tarefa>> getAllTarefas() {
+        List<Tarefa> list = tarefaService.getAllTarefas();
+        if (list.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Tarefa> getTarefaById(@PathVariable Long id) {
+        return ResponseEntity.ok(tarefaService.getTarefaById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Tarefa> updateTarefaById(@PathVariable Long id, @RequestBody Tarefa tarefa) {
+        return ResponseEntity.ok(tarefaService.updateTarefa(id, tarefa));
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        tarefaRepository.deleteById(id);
+    public ResponseEntity<String> deleteTarefaById(@PathVariable Long id) {
+        tarefaService.deleteTarefa(id);
+        return ResponseEntity.ok("Tarefa deletada");
     }
 }

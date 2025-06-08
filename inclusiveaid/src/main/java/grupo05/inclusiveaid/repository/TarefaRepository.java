@@ -1,7 +1,7 @@
-package com.seuusuario.seuprojeto.repository;
+package grupo05.inclusiveaid.repository;
 
-import com.seuusuario.seuprojeto.model.Tarefa;
 import org.springframework.data.jpa.repository.JpaRepository;
+import grupo05.inclusiveaid.entity.Tarefa;
 
 public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
 }
