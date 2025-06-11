@@ -17,6 +17,30 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controlador responsável pelo gerenciamento de agentes de IA no sistema InclusiveAID.
+ * Fornece endpoints para criar, atualizar, excluir e consultar agentes de IA, além de
+ * gerenciar suas interações com usuários e funcionalidades específicas.
+ * 
+ * Este controlador implementa operações para:
+ * - Gerenciamento básico de agentes (CRUD)
+ * - Processamento de comandos de voz
+ * - Análise e adaptação de layouts
+ * - Geração de legendas
+ * - Descrição de imagens
+ * - Automação de tarefas
+ * - Gerenciamento de modelos de IA
+ * 
+ * Os agentes de IA são componentes fundamentais do sistema, responsáveis por:
+ * - Processar e interpretar comandos de voz dos usuários
+ * - Analisar e adaptar interfaces para melhorar a acessibilidade
+ * - Gerar legendas e descrições para conteúdo multimídia
+ * - Automatizar tarefas comuns para facilitar o uso do sistema
+ * - Aprender e se adaptar com base nas interações dos usuários
+ * 
+ * @author Grupo 05
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/ai-agents")
 @RequiredArgsConstructor
@@ -25,6 +49,17 @@ public class AIAgentController {
 
     private final AIAgentService aiAgentService;
 
+    /**
+     * Cria um novo agente de IA no sistema.
+     * 
+     * Este endpoint permite a criação de um novo agente com configurações e capacidades específicas.
+     * O agente criado pode ser utilizado para diversas funcionalidades do sistema.
+     * 
+     * @param agentDTO Dados de configuração do agente de IA
+     * @return ResponseEntity contendo os dados do agente criado
+     * @throws ValidationException se os dados do agente forem inválidos
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Create a new AI agent",
         description = "Creates a new AI agent with specified configuration and capabilities"
@@ -53,6 +88,18 @@ public class AIAgentController {
         return ResponseEntity.ok(aiAgentService.createAgent(agentDTO));
     }
 
+    /**
+     * Atualiza um agente de IA existente.
+     * 
+     * Este endpoint permite a atualização das configurações e capacidades de um agente existente.
+     * Todas as alterações são validadas antes de serem aplicadas.
+     * 
+     * @param id ID do agente a ser atualizado
+     * @param agentDTO Novos dados de configuração do agente
+     * @return ResponseEntity contendo os dados atualizados do agente
+     * @throws ResourceNotFoundException se o agente não for encontrado
+     * @throws ValidationException se os dados de atualização forem inválidos
+     */
     @Operation(
         summary = "Update an existing AI agent",
         description = "Updates the configuration and capabilities of an existing AI agent"
@@ -83,6 +130,16 @@ public class AIAgentController {
         return ResponseEntity.ok(aiAgentService.updateAgent(id, agentDTO));
     }
 
+    /**
+     * Remove um agente de IA do sistema.
+     * 
+     * Este endpoint permite a exclusão permanente de um agente de IA.
+     * Todas as interações e dados associados ao agente também são removidos.
+     * 
+     * @param id ID do agente a ser excluído
+     * @return ResponseEntity vazio com status 204 (No Content)
+     * @throws ResourceNotFoundException se o agente não for encontrado
+     */
     @Operation(
         summary = "Delete an AI agent",
         description = "Removes an AI agent from the system"
@@ -106,6 +163,15 @@ public class AIAgentController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Recupera informações detalhadas de um agente de IA específico.
+     * 
+     * Este endpoint retorna todos os dados de configuração e status de um agente específico.
+     * 
+     * @param id ID do agente a ser recuperado
+     * @return ResponseEntity contendo os dados do agente
+     * @throws ResourceNotFoundException se o agente não for encontrado
+     */
     @Operation(
         summary = "Get an AI agent by ID",
         description = "Retrieves detailed information about a specific AI agent"
@@ -130,6 +196,14 @@ public class AIAgentController {
         return ResponseEntity.ok(aiAgentService.getAgent(id));
     }
 
+    /**
+     * Recupera a lista de todos os agentes de IA no sistema.
+     * 
+     * Este endpoint retorna informações básicas de todos os agentes cadastrados,
+     * independente de seu status atual.
+     * 
+     * @return ResponseEntity contendo a lista de agentes
+     */
     @Operation(
         summary = "Get all AI agents",
         description = "Retrieves a list of all AI agents in the system"
@@ -147,6 +221,14 @@ public class AIAgentController {
         return ResponseEntity.ok(aiAgentService.getAllAgents());
     }
 
+    /**
+     * Recupera a lista de agentes de IA ativos no sistema.
+     * 
+     * Este endpoint retorna apenas os agentes que estão atualmente ativos e
+     * disponíveis para interação com os usuários.
+     * 
+     * @return ResponseEntity contendo a lista de agentes ativos
+     */
     @Operation(
         summary = "Get all active AI agents",
         description = "Retrieves a list of all currently active AI agents"
@@ -164,6 +246,18 @@ public class AIAgentController {
         return ResponseEntity.ok(aiAgentService.getActiveAgents());
     }
 
+    /**
+     * Processa um comando de voz para um usuário específico.
+     * 
+     * Este endpoint permite que um agente de IA processe e execute um comando
+     * de voz fornecido por um usuário, retornando o resultado da interação.
+     * 
+     * @param agentId ID do agente de IA
+     * @param userId ID do usuário
+     * @param command Comando de voz a ser processado
+     * @return ResponseEntity contendo o resultado da interação
+     * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
+     */
     @Operation(
         summary = "Process a voice command",
         description = "Processes a voice command for a specific user using the specified AI agent"
@@ -192,6 +286,18 @@ public class AIAgentController {
         return ResponseEntity.ok(aiAgentService.processVoiceCommand(agentId, userId, command));
     }
 
+    /**
+     * Analisa um layout de interface para melhorias de acessibilidade.
+     * 
+     * Este endpoint permite que um agente de IA analise um layout de interface
+     * e sugira melhorias para torná-lo mais acessível.
+     * 
+     * @param agentId ID do agente de IA
+     * @param userId ID do usuário
+     * @param layoutData Dados do layout a ser analisado
+     * @return ResponseEntity contendo as sugestões de melhorias
+     * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
+     */
     @Operation(
         summary = "Analyze a layout",
         description = "Analyzes a UI layout for accessibility improvements"
@@ -220,6 +326,19 @@ public class AIAgentController {
         return ResponseEntity.ok(aiAgentService.analyzeLayout(agentId, userId, layoutData));
     }
 
+    /**
+     * Gera legendas para conteúdo de áudio.
+     * 
+     * Este endpoint permite que um agente de IA gere legendas para
+     * conteúdo de áudio, melhorando a acessibilidade para usuários
+     * com deficiência auditiva.
+     * 
+     * @param agentId ID do agente de IA
+     * @param userId ID do usuário
+     * @param audioText Texto do áudio para gerar legendas
+     * @return ResponseEntity contendo as legendas geradas
+     * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
+     */
     @Operation(
         summary = "Generate subtitles",
         description = "Generates subtitles for audio content"
@@ -248,6 +367,18 @@ public class AIAgentController {
         return ResponseEntity.ok(aiAgentService.generateSubtitle(agentId, userId, audioText));
     }
 
+    /**
+     * Gera uma descrição de uma imagem para usuários com deficiência visual.
+     * 
+     * Este endpoint permite que um agente de IA analise uma imagem e
+     * gere uma descrição detalhada para usuários com deficiência visual.
+     * 
+     * @param agentId ID do agente de IA
+     * @param userId ID do usuário
+     * @param imageData Dados da imagem a ser descrita
+     * @return ResponseEntity contendo a descrição gerada
+     * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
+     */
     @Operation(
         summary = "Describe an image",
         description = "Generates a description of an image for visually impaired users"
@@ -276,6 +407,18 @@ public class AIAgentController {
         return ResponseEntity.ok(aiAgentService.describeImage(agentId, userId, imageData));
     }
 
+    /**
+     * Adapta um layout para melhorar a acessibilidade.
+     * 
+     * Este endpoint permite que um agente de IA modifique um layout
+     * para torná-lo mais acessível para usuários com deficiência.
+     * 
+     * @param agentId ID do agente de IA
+     * @param userId ID do usuário
+     * @param layoutData Dados do layout a ser adaptado
+     * @return ResponseEntity contendo o layout adaptado
+     * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
+     */
     @Operation(
         summary = "Adapt a layout for accessibility",
         description = "Modifies a UI layout to improve accessibility for users with disabilities"
@@ -304,6 +447,18 @@ public class AIAgentController {
         return ResponseEntity.ok(aiAgentService.adaptLayout(agentId, userId, layoutData));
     }
 
+    /**
+     * Automatiza uma tarefa usando capacidades de IA.
+     * 
+     * Este endpoint permite que um agente de IA automatize uma tarefa
+     * específica com base em uma descrição fornecida.
+     * 
+     * @param agentId ID do agente de IA
+     * @param userId ID do usuário
+     * @param taskDescription Descrição da tarefa a ser automatizada
+     * @return ResponseEntity contendo o resultado da automação
+     * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
+     */
     @Operation(
         summary = "Automate a task",
         description = "Automates a task using AI capabilities"
@@ -332,6 +487,18 @@ public class AIAgentController {
         return ResponseEntity.ok(aiAgentService.automateTask(agentId, userId, taskDescription));
     }
 
+    /**
+     * Atualiza a configuração do modelo de IA de um agente.
+     * 
+     * Este endpoint permite atualizar o tipo e versão do modelo de IA
+     * utilizado por um agente específico.
+     * 
+     * @param agentId ID do agente de IA
+     * @param modelType Tipo do modelo de IA
+     * @param modelVersion Versão do modelo de IA
+     * @return ResponseEntity vazio com status 200 (OK)
+     * @throws ResourceNotFoundException se o agente não for encontrado
+     */
     @Operation(
         summary = "Update AI model",
         description = "Updates the AI model configuration for an agent"
@@ -359,6 +526,17 @@ public class AIAgentController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Inicia o treinamento do modelo de IA com dados fornecidos.
+     * 
+     * Este endpoint permite iniciar o processo de treinamento do modelo de IA
+     * de um agente específico usando dados fornecidos.
+     * 
+     * @param agentId ID do agente de IA
+     * @param trainingData Dados para treinamento do modelo
+     * @return ResponseEntity vazio com status 200 (OK)
+     * @throws ResourceNotFoundException se o agente não for encontrado
+     */
     @Operation(
         summary = "Train AI model",
         description = "Initiates training of the AI model with provided data"

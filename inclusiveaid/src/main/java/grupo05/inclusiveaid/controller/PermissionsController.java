@@ -16,8 +16,23 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controlador para gerenciamento de permissões no sistema AID.
+ * Controlador responsável pelo gerenciamento de permissões no sistema InclusiveAID.
  * Fornece endpoints para criar, recuperar, listar, atualizar e excluir permissões de usuários.
+ * 
+ * Este controlador implementa o controle de acesso baseado em permissões (RBAC),
+ * permitindo:
+ * - Criar novas permissões para usuários
+ * - Consultar permissões existentes
+ * - Listar todas as permissões de forma paginada
+ * - Atualizar permissões existentes
+ * - Excluir permissões (requer permissões específicas)
+ * 
+ * Todas as operações são protegidas por autenticação e autorização,
+ * garantindo que apenas usuários com as permissões adequadas possam
+ * gerenciar as permissões do sistema.
+ * 
+ * @author Grupo 05
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/api/permissions")
@@ -26,6 +41,18 @@ import org.springframework.web.bind.annotation.*;
 public class PermissionsController {
     private final PermissionsService svc;
 
+    /**
+     * Cria uma nova permissão no sistema.
+     * 
+     * Este endpoint permite criar uma nova permissão para um usuário específico.
+     * A permissão define quais ações o usuário pode realizar no sistema.
+     * 
+     * @param dto Dados da permissão a ser criada
+     * @return ResponseEntity contendo os dados da permissão criada
+     * @throws ValidationException se os dados da permissão forem inválidos
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para criar permissões
+     */
     @Operation(
         summary = "Criar permissão",
         description = "Cria uma nova permissão para um usuário no sistema"
@@ -58,6 +85,17 @@ public class PermissionsController {
         return ResponseEntity.ok(svc.create(dto));
     }
 
+    /**
+     * Recupera uma permissão específica pelo seu ID.
+     * 
+     * Este endpoint permite consultar os detalhes de uma permissão específica,
+     * incluindo o usuário associado e as ações permitidas.
+     * 
+     * @param id ID da permissão a ser recuperada
+     * @return ResponseEntity contendo os dados da permissão
+     * @throws ResourceNotFoundException se a permissão não for encontrada
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Obter permissão por ID",
         description = "Recupera uma permissão específica pelo seu ID"
@@ -86,6 +124,18 @@ public class PermissionsController {
         return ResponseEntity.ok(svc.getById(id));
     }
 
+    /**
+     * Lista todas as permissões do sistema de forma paginada.
+     * 
+     * Este endpoint permite consultar todas as permissões registradas,
+     * com suporte a paginação para melhor performance.
+     * 
+     * @param page Número da página (começando em 0)
+     * @param size Quantidade de itens por página
+     * @return ResponseEntity contendo a página de permissões
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para listar permissões
+     */
     @Operation(
         summary = "Listar todas as permissões",
         description = "Recupera uma lista paginada de todas as permissões no sistema"
@@ -116,6 +166,20 @@ public class PermissionsController {
         return ResponseEntity.ok(svc.listAll(page, size));
     }
 
+    /**
+     * Atualiza uma permissão existente.
+     * 
+     * Este endpoint permite modificar os dados de uma permissão existente,
+     * como as ações permitidas ou o usuário associado.
+     * 
+     * @param id ID da permissão a ser atualizada
+     * @param dto Novos dados da permissão
+     * @return ResponseEntity contendo os dados atualizados da permissão
+     * @throws ValidationException se os dados da permissão forem inválidos
+     * @throws ResourceNotFoundException se a permissão não for encontrada
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para atualizar permissões
+     */
     @Operation(
         summary = "Atualizar permissão",
         description = "Atualiza uma permissão existente com novos dados"
@@ -154,6 +218,18 @@ public class PermissionsController {
         return ResponseEntity.ok(svc.update(id, dto));
     }
 
+    /**
+     * Exclui uma permissão do sistema.
+     * 
+     * Este endpoint permite a exclusão permanente de uma permissão.
+     * Requer permissões específicas para realizar a operação.
+     * 
+     * @param id ID da permissão a ser excluída
+     * @return ResponseEntity vazio com status 204 (No Content)
+     * @throws ResourceNotFoundException se a permissão não for encontrada
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para excluir permissões
+     */
     @Operation(
         summary = "Excluir permissão",
         description = "Remove uma permissão do sistema"

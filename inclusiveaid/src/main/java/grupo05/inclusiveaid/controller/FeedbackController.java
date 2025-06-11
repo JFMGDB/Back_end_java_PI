@@ -16,8 +16,17 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller for managing user feedback in the AID system.
- * Provides endpoints for creating, retrieving, listing, and deleting feedback from users about accessibility features.
+ * Controlador responsável pelo gerenciamento de feedback dos usuários no sistema InclusiveAID.
+ * Fornece endpoints para criar, recuperar, listar e excluir feedback sobre recursos de acessibilidade.
+ * 
+ * Este controlador permite que os usuários:
+ * - Enviem feedback sobre recursos de acessibilidade
+ * - Consultem feedback existente
+ * - Listem todos os feedbacks de forma paginada
+ * - Excluam feedbacks (requer permissões específicas)
+ * 
+ * @author Grupo 05
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/api/feedback")
@@ -26,6 +35,17 @@ import org.springframework.web.bind.annotation.*;
 public class FeedbackController {
     private final FeedbackService svc;
 
+    /**
+     * Cria um novo registro de feedback no sistema.
+     * 
+     * Este endpoint permite que usuários enviem feedback sobre recursos de acessibilidade.
+     * O feedback é validado antes de ser armazenado no sistema.
+     * 
+     * @param dto Dados do feedback a ser criado
+     * @return ResponseEntity contendo os dados do feedback criado
+     * @throws ValidationException se os dados do feedback forem inválidos
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Create feedback",
         description = "Creates a new feedback entry from a user about accessibility features"
@@ -54,6 +74,17 @@ public class FeedbackController {
         return ResponseEntity.ok(svc.create(dto));
     }
 
+    /**
+     * Recupera um feedback específico pelo seu ID.
+     * 
+     * Este endpoint permite consultar os detalhes de um feedback específico,
+     * incluindo o conteúdo da mensagem e informações do usuário.
+     * 
+     * @param id ID do feedback a ser recuperado
+     * @return ResponseEntity contendo os dados do feedback
+     * @throws ResourceNotFoundException se o feedback não for encontrado
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Get feedback by ID",
         description = "Retrieves a specific feedback entry by its ID"
@@ -82,6 +113,17 @@ public class FeedbackController {
         return ResponseEntity.ok(svc.getById(id));
     }
 
+    /**
+     * Lista todos os feedbacks do sistema de forma paginada.
+     * 
+     * Este endpoint permite consultar todos os feedbacks registrados,
+     * com suporte a paginação para melhor performance.
+     * 
+     * @param page Número da página (começando em 0)
+     * @param size Quantidade de itens por página
+     * @return ResponseEntity contendo a página de feedbacks
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "List all feedback",
         description = "Retrieves a paginated list of all feedback entries in the system"
@@ -108,6 +150,18 @@ public class FeedbackController {
         return ResponseEntity.ok(svc.listAll(page, size));
     }
 
+    /**
+     * Exclui um feedback do sistema.
+     * 
+     * Este endpoint permite a exclusão permanente de um feedback.
+     * Requer permissões específicas para realizar a operação.
+     * 
+     * @param id ID do feedback a ser excluído
+     * @return ResponseEntity vazio com status 204 (No Content)
+     * @throws ResourceNotFoundException se o feedback não for encontrado
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para excluir
+     */
     @Operation(
         summary = "Delete feedback",
         description = "Deletes a feedback entry from the system"

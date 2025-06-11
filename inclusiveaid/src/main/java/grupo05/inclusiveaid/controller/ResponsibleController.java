@@ -18,6 +18,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controlador responsável pelo gerenciamento de usuários responsáveis no sistema InclusiveAID.
+ * Fornece endpoints para criar, recuperar, listar, atualizar e excluir usuários responsáveis.
+ * 
+ * Este controlador permite:
+ * - Cadastrar novos usuários responsáveis no sistema
+ * - Consultar usuários responsáveis existentes
+ * - Listar todos os usuários responsáveis
+ * - Atualizar informações de usuários responsáveis
+ * - Remover usuários responsáveis do sistema
+ * 
+ * Os usuários responsáveis são pessoas que auxiliam pessoas com deficiência,
+ * podendo ser cuidadores, familiares ou profissionais de saúde.
+ * 
+ * @author Grupo 05
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/responsible")
 @RequiredArgsConstructor
@@ -25,6 +42,15 @@ import java.util.List;
 public class ResponsibleController {
     private final ResponsibleService responsibleService;
 
+    /**
+     * Lista todos os usuários responsáveis do sistema.
+     * 
+     * Este endpoint permite consultar todos os usuários responsáveis registrados,
+     * retornando uma lista com seus dados básicos.
+     * 
+     * @return ResponseEntity contendo a lista de usuários responsáveis
+     * @throws InternalServerErrorException se ocorrer um erro interno no servidor
+     */
     @GetMapping
     @Operation(summary = "Listar todos os responsáveis", description = "Recupera a lista de todos os usuários responsáveis no sistema")
     @ApiResponses(value = {
@@ -42,6 +68,17 @@ public class ResponsibleController {
         return ResponseEntity.ok(responsibles);
     }
 
+    /**
+     * Recupera um usuário responsável específico pelo seu ID.
+     * 
+     * Este endpoint permite consultar os detalhes de um usuário responsável específico,
+     * incluindo suas informações pessoais e contato.
+     * 
+     * @param id ID do usuário responsável a ser recuperado
+     * @return ResponseEntity contendo os dados do usuário responsável
+     * @throws ResourceNotFoundException se o usuário responsável não for encontrado
+     * @throws InternalServerErrorException se ocorrer um erro interno no servidor
+     */
     @GetMapping("/{id}")
     @Operation(summary = "Buscar responsável por ID", description = "Recupera um usuário responsável específico pelo seu ID")
     @ApiResponses(value = {
@@ -57,6 +94,19 @@ public class ResponsibleController {
         return ResponseEntity.ok(responsibleService.getResponsibleById(id));
     }
 
+    /**
+     * Cria um novo usuário responsável no sistema.
+     * 
+     * Este endpoint permite cadastrar um novo usuário responsável,
+     * incluindo informações como nome, e-mail, telefone e associação
+     * com um usuário do sistema.
+     * 
+     * @param responsibleDTO Dados do usuário responsável a ser criado
+     * @return ResponseEntity contendo os dados do usuário responsável criado
+     * @throws ValidationException se os dados do usuário responsável forem inválidos
+     * @throws ConflictException se o e-mail já estiver em uso
+     * @throws InternalServerErrorException se ocorrer um erro interno no servidor
+     */
     @PostMapping
     @Operation(summary = "Criar responsável", description = "Cria um novo usuário responsável no sistema")
     @ApiResponses(value = {
@@ -81,6 +131,20 @@ public class ResponsibleController {
         return ResponseEntity.ok(responsibleService.createResponsible(responsibleDTO));
     }
 
+    /**
+     * Atualiza um usuário responsável existente no sistema.
+     * 
+     * Este endpoint permite modificar as informações de um usuário responsável,
+     * como dados pessoais e contato.
+     * 
+     * @param id ID do usuário responsável a ser atualizado
+     * @param responsibleDTO Novos dados do usuário responsável
+     * @return ResponseEntity contendo os dados atualizados do usuário responsável
+     * @throws ValidationException se os dados do usuário responsável forem inválidos
+     * @throws ResourceNotFoundException se o usuário responsável não for encontrado
+     * @throws ConflictException se o e-mail já estiver em uso
+     * @throws InternalServerErrorException se ocorrer um erro interno no servidor
+     */
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar responsável", description = "Atualiza as informações de um usuário responsável existente")
     @ApiResponses(value = {
@@ -100,6 +164,17 @@ public class ResponsibleController {
         return ResponseEntity.ok(responsibleService.updateResponsible(id, responsibleDTO));
     }
 
+    /**
+     * Remove um usuário responsável do sistema.
+     * 
+     * Este endpoint permite excluir permanentemente um usuário responsável,
+     * removendo-o do sistema e suas associações com usuários.
+     * 
+     * @param id ID do usuário responsável a ser excluído
+     * @return ResponseEntity vazio com status 204 (No Content)
+     * @throws ResourceNotFoundException se o usuário responsável não for encontrado
+     * @throws InternalServerErrorException se ocorrer um erro interno no servidor
+     */
     @DeleteMapping("/{id}")
     @Operation(summary = "Excluir responsável", description = "Remove um usuário responsável do sistema")
     @ApiResponses(value = {

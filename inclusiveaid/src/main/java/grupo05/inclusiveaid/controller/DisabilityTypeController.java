@@ -16,8 +16,21 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controlador para gerenciamento de tipos de deficiência no sistema AID.
+ * Controlador responsável pelo gerenciamento de tipos de deficiência no sistema InclusiveAID.
  * Fornece endpoints para criar, recuperar, listar, atualizar e excluir tipos de deficiência.
+ * 
+ * Este controlador permite:
+ * - Cadastrar novos tipos de deficiência no sistema
+ * - Consultar tipos de deficiência existentes
+ * - Listar todos os tipos de deficiência de forma paginada
+ * - Atualizar informações de tipos de deficiência
+ * - Remover tipos de deficiência do sistema
+ * 
+ * Os tipos de deficiência são utilizados para categorizar e identificar
+ * as diferentes necessidades de acessibilidade dos usuários do sistema.
+ * 
+ * @author Grupo 05
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/api/disability-types")
@@ -26,6 +39,19 @@ import org.springframework.web.bind.annotation.*;
 public class DisabilityTypeController {
     private final DisabilityTypeService svc;
 
+    /**
+     * Cria um novo tipo de deficiência no sistema.
+     * 
+     * Este endpoint permite cadastrar um novo tipo de deficiência,
+     * incluindo informações como nome, descrição e requisitos
+     * específicos de acessibilidade.
+     * 
+     * @param dto Dados do tipo de deficiência a ser criado
+     * @return ResponseEntity contendo os dados do tipo de deficiência criado
+     * @throws ValidationException se os dados do tipo de deficiência forem inválidos
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para criar tipos de deficiência
+     */
     @Operation(
         summary = "Criar tipo de deficiência",
         description = "Cria um novo tipo de deficiência no sistema"
@@ -58,6 +84,17 @@ public class DisabilityTypeController {
         return ResponseEntity.ok(svc.create(dto));
     }
 
+    /**
+     * Recupera um tipo de deficiência específico pelo seu ID.
+     * 
+     * Este endpoint permite consultar os detalhes de um tipo de deficiência específico,
+     * incluindo suas características e requisitos de acessibilidade.
+     * 
+     * @param id ID do tipo de deficiência a ser recuperado
+     * @return ResponseEntity contendo os dados do tipo de deficiência
+     * @throws ResourceNotFoundException se o tipo de deficiência não for encontrado
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Obter tipo de deficiência por ID",
         description = "Recupera um tipo de deficiência específico pelo seu ID"
@@ -86,6 +123,17 @@ public class DisabilityTypeController {
         return ResponseEntity.ok(svc.getById(id));
     }
 
+    /**
+     * Lista todos os tipos de deficiência do sistema de forma paginada.
+     * 
+     * Este endpoint permite consultar todos os tipos de deficiência registrados,
+     * com suporte a paginação para melhor performance.
+     * 
+     * @param page Número da página (começando em 0)
+     * @param size Quantidade de itens por página
+     * @return ResponseEntity contendo a página de tipos de deficiência
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Listar todos os tipos de deficiência",
         description = "Recupera uma lista paginada de todos os tipos de deficiência no sistema"
@@ -112,6 +160,20 @@ public class DisabilityTypeController {
         return ResponseEntity.ok(svc.listAll(page, size));
     }
 
+    /**
+     * Atualiza um tipo de deficiência existente no sistema.
+     * 
+     * Este endpoint permite modificar as informações de um tipo de deficiência,
+     * como nome, descrição e requisitos de acessibilidade.
+     * 
+     * @param id ID do tipo de deficiência a ser atualizado
+     * @param dto Novos dados do tipo de deficiência
+     * @return ResponseEntity contendo os dados atualizados do tipo de deficiência
+     * @throws ValidationException se os dados do tipo de deficiência forem inválidos
+     * @throws ResourceNotFoundException se o tipo de deficiência não for encontrado
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para atualizar tipos de deficiência
+     */
     @Operation(
         summary = "Atualizar tipo de deficiência",
         description = "Atualiza um tipo de deficiência existente com novos dados"
@@ -150,6 +212,18 @@ public class DisabilityTypeController {
         return ResponseEntity.ok(svc.update(id, dto));
     }
 
+    /**
+     * Remove um tipo de deficiência do sistema.
+     * 
+     * Este endpoint permite excluir permanentemente um tipo de deficiência,
+     * removendo-o do sistema e suas associações com usuários.
+     * 
+     * @param id ID do tipo de deficiência a ser excluído
+     * @return ResponseEntity vazio com status 204 (No Content)
+     * @throws ResourceNotFoundException se o tipo de deficiência não for encontrado
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para excluir tipos de deficiência
+     */
     @Operation(
         summary = "Excluir tipo de deficiência",
         description = "Remove um tipo de deficiência do sistema"

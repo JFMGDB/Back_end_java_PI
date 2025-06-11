@@ -11,9 +11,33 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Configuração de cabeçalhos de segurança HTTP da aplicação InclusiveAID.
+ * Esta classe define os cabeçalhos de segurança que serão adicionados às respostas HTTP,
+ * ajudando a proteger a aplicação contra diversos tipos de ataques.
+ * 
+ * Implementa:
+ * - Proteção contra MIME type sniffing
+ * - Proteção contra clickjacking
+ * - Proteção contra XSS
+ * - Políticas de segurança de conteúdo (CSP) específicas para Swagger UI
+ */
 @Configuration
 public class SecurityHeadersConfig {
 
+    /**
+     * Configura o filtro de cabeçalhos de segurança.
+     * Define diferentes conjuntos de cabeçalhos de segurança para diferentes
+     * partes da aplicação, incluindo cabeçalhos padrão e específicos para Swagger UI.
+     * 
+     * Cabeçalhos implementados:
+     * - X-Content-Type-Options: nosniff
+     * - X-Frame-Options: DENY
+     * - X-XSS-Protection: 1; mode=block
+     * - Content-Security-Policy: Configurações específicas para Swagger UI e API docs
+     * 
+     * @return Filtro configurado com todos os cabeçalhos de segurança
+     */
     @Bean
     public HeaderWriterFilter headerWriterFilter() {
         List<HeaderWriter> writers = new ArrayList<>();

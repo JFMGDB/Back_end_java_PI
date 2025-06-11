@@ -14,8 +14,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * Configuração geral da aplicação.
- * Define beans essenciais para autenticação e segurança.
+ * Configuração geral da aplicação InclusiveAID.
+ * Esta classe define os beans essenciais para o funcionamento da autenticação
+ * e segurança da aplicação, incluindo:
+ * - Serviço de detalhes do usuário
+ * - Provedor de autenticação
+ * - Gerenciador de autenticação
+ * - Codificador de senha
+ * 
+ * Utiliza injeção de dependência para acessar o repositório de usuários
+ * e configura todos os componentes necessários para o processo de autenticação.
  */
 @Configuration
 @RequiredArgsConstructor
@@ -25,7 +33,13 @@ public class ApplicationConfig {
 
     /**
      * Configura o serviço de detalhes do usuário.
-     * Carrega usuários do banco de dados para autenticação.
+     * Este serviço é responsável por carregar os dados do usuário do banco de dados
+     * durante o processo de autenticação.
+     * 
+     * Implementação:
+     * - Busca o usuário pelo email no repositório
+     * - Lança exceção se o usuário não for encontrado
+     * 
      * @return Serviço de detalhes do usuário configurado
      */
     @Bean
@@ -36,7 +50,14 @@ public class ApplicationConfig {
 
     /**
      * Configura o provedor de autenticação.
-     * Define como os usuários serão autenticados.
+     * Define como os usuários serão autenticados no sistema,
+     * utilizando o serviço de detalhes do usuário e o codificador de senha.
+     * 
+     * Implementação:
+     * - Utiliza DaoAuthenticationProvider para autenticação baseada em banco de dados
+     * - Configura o serviço de detalhes do usuário
+     * - Utiliza BCrypt para verificação de senha
+     * 
      * @return Provedor de autenticação configurado
      */
     @Bean
@@ -49,9 +70,12 @@ public class ApplicationConfig {
 
     /**
      * Configura o gerenciador de autenticação.
-     * Gerencia o processo de autenticação.
-     * @param config Configuração de autenticação
+     * Este bean é responsável por gerenciar todo o processo de autenticação,
+     * incluindo a validação de credenciais e a criação de tokens de autenticação.
+     * 
+     * @param config Configuração de autenticação do Spring Security
      * @return Gerenciador de autenticação configurado
+     * @throws Exception Se houver erro na configuração
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -60,7 +84,14 @@ public class ApplicationConfig {
 
     /**
      * Configura o codificador de senha.
-     * Define o algoritmo de criptografia para senhas.
+     * Define o algoritmo de criptografia que será utilizado para
+     * armazenar e verificar senhas de usuários.
+     * 
+     * Implementação:
+     * - Utiliza BCrypt como algoritmo de hash
+     * - Inclui salt automático para maior segurança
+     * - Configura força de trabalho padrão do BCrypt
+     * 
      * @return Codificador de senha configurado
      */
     @Bean

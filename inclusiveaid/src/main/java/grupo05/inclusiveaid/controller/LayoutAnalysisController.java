@@ -16,8 +16,21 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controlador para gerenciamento de análises de layout no sistema AID.
- * Fornece endpoints para criar, recuperar, listar e excluir análises de layout para melhorar a acessibilidade.
+ * Controlador responsável pelo gerenciamento de análises de layout no sistema InclusiveAID.
+ * Fornece endpoints para criar, recuperar, listar e excluir análises de layout para melhorar
+ * a acessibilidade das interfaces do sistema.
+ * 
+ * Este controlador permite:
+ * - Criar novas análises de layout
+ * - Consultar análises existentes
+ * - Listar todas as análises de forma paginada
+ * - Excluir análises (requer permissões específicas)
+ * 
+ * As análises de layout são utilizadas para identificar e sugerir melhorias
+ * na acessibilidade das interfaces do sistema.
+ * 
+ * @author Grupo 05
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/api/layout-analysis")
@@ -26,6 +39,18 @@ import org.springframework.web.bind.annotation.*;
 public class LayoutAnalysisController {
     private final LayoutAnalysisService svc;
 
+    /**
+     * Cria uma nova análise de layout no sistema.
+     * 
+     * Este endpoint permite criar uma análise de layout para avaliar e melhorar
+     * a acessibilidade de uma interface específica. A análise inclui recomendações
+     * para tornar a interface mais acessível.
+     * 
+     * @param dto Dados da análise de layout a ser criada
+     * @return ResponseEntity contendo os dados da análise criada
+     * @throws ValidationException se os dados da análise forem inválidos
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Criar análise de layout",
         description = "Cria uma nova análise de layout para avaliar a acessibilidade da interface"
@@ -54,6 +79,17 @@ public class LayoutAnalysisController {
         return ResponseEntity.ok(svc.create(dto));
     }
 
+    /**
+     * Recupera uma análise de layout específica pelo seu ID.
+     * 
+     * Este endpoint permite consultar os detalhes de uma análise de layout específica,
+     * incluindo as recomendações de acessibilidade e o status da análise.
+     * 
+     * @param id ID da análise de layout a ser recuperada
+     * @return ResponseEntity contendo os dados da análise
+     * @throws ResourceNotFoundException se a análise não for encontrada
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Obter análise de layout por ID",
         description = "Recupera uma análise de layout específica pelo seu ID"
@@ -82,6 +118,17 @@ public class LayoutAnalysisController {
         return ResponseEntity.ok(svc.getById(id));
     }
 
+    /**
+     * Lista todas as análises de layout do sistema de forma paginada.
+     * 
+     * Este endpoint permite consultar todas as análises de layout registradas,
+     * com suporte a paginação para melhor performance.
+     * 
+     * @param page Número da página (começando em 0)
+     * @param size Quantidade de itens por página
+     * @return ResponseEntity contendo a página de análises
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Listar todas as análises de layout",
         description = "Recupera uma lista paginada de todas as análises de layout no sistema"
@@ -108,6 +155,18 @@ public class LayoutAnalysisController {
         return ResponseEntity.ok(svc.listAll(page, size));
     }
 
+    /**
+     * Exclui uma análise de layout do sistema.
+     * 
+     * Este endpoint permite a exclusão permanente de uma análise de layout.
+     * Requer permissões específicas para realizar a operação.
+     * 
+     * @param id ID da análise de layout a ser excluída
+     * @return ResponseEntity vazio com status 204 (No Content)
+     * @throws ResourceNotFoundException se a análise não for encontrada
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para excluir
+     */
     @Operation(
         summary = "Excluir análise de layout",
         description = "Remove uma análise de layout do sistema"

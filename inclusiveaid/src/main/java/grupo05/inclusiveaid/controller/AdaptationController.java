@@ -16,8 +16,25 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controlador para gerenciamento de adaptações de acessibilidade no sistema AID.
- * Fornece endpoints para criar, recuperar, listar, atualizar e excluir adaptações para diferentes tipos de deficiência.
+ * Controlador responsável pelo gerenciamento de adaptações de acessibilidade no sistema InclusiveAID.
+ * Fornece endpoints para criar, recuperar, listar, atualizar e excluir adaptações.
+ * 
+ * Este controlador permite:
+ * - Cadastrar novas adaptações de acessibilidade no sistema
+ * - Consultar adaptações existentes
+ * - Listar todas as adaptações de forma paginada
+ * - Atualizar informações de adaptações
+ * - Remover adaptações do sistema
+ * 
+ * As adaptações são configurações específicas que melhoram a acessibilidade
+ * do sistema para diferentes tipos de deficiência, como:
+ * - Adaptações visuais (alto contraste, tamanho de fonte)
+ * - Adaptações auditivas (legendas, descrições de áudio)
+ * - Adaptações motoras (navegação por teclado, comandos de voz)
+ * - Adaptações cognitivas (simplificação de interface, assistentes)
+ * 
+ * @author Grupo 05
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/api/adaptations")
@@ -26,6 +43,19 @@ import org.springframework.web.bind.annotation.*;
 public class AdaptationController {
     private final AdaptationService svc;
 
+    /**
+     * Cria uma nova adaptação de acessibilidade no sistema.
+     * 
+     * Este endpoint permite cadastrar uma nova adaptação,
+     * incluindo informações como tipo, configurações e
+     * requisitos específicos de acessibilidade.
+     * 
+     * @param dto Dados da adaptação a ser criada
+     * @return ResponseEntity contendo os dados da adaptação criada
+     * @throws ValidationException se os dados da adaptação forem inválidos
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para criar adaptações
+     */
     @Operation(
         summary = "Criar adaptação",
         description = "Cria uma nova adaptação de acessibilidade no sistema"
@@ -58,6 +88,17 @@ public class AdaptationController {
         return ResponseEntity.ok(svc.create(dto));
     }
 
+    /**
+     * Recupera uma adaptação específica pelo seu ID.
+     * 
+     * Este endpoint permite consultar os detalhes de uma adaptação específica,
+     * incluindo suas configurações e requisitos de acessibilidade.
+     * 
+     * @param id ID da adaptação a ser recuperada
+     * @return ResponseEntity contendo os dados da adaptação
+     * @throws ResourceNotFoundException se a adaptação não for encontrada
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Obter adaptação por ID",
         description = "Recupera uma adaptação específica pelo seu ID"
@@ -86,6 +127,17 @@ public class AdaptationController {
         return ResponseEntity.ok(svc.getById(id));
     }
 
+    /**
+     * Lista todas as adaptações do sistema de forma paginada.
+     * 
+     * Este endpoint permite consultar todas as adaptações registradas,
+     * com suporte a paginação para melhor performance.
+     * 
+     * @param page Número da página (começando em 0)
+     * @param size Quantidade de itens por página
+     * @return ResponseEntity contendo a página de adaptações
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Listar todas as adaptações",
         description = "Recupera uma lista paginada de todas as adaptações no sistema"
@@ -112,6 +164,20 @@ public class AdaptationController {
         return ResponseEntity.ok(svc.listAll(page, size));
     }
 
+    /**
+     * Atualiza uma adaptação existente no sistema.
+     * 
+     * Este endpoint permite modificar as informações de uma adaptação,
+     * como configurações e requisitos de acessibilidade.
+     * 
+     * @param id ID da adaptação a ser atualizada
+     * @param dto Novos dados da adaptação
+     * @return ResponseEntity contendo os dados atualizados da adaptação
+     * @throws ValidationException se os dados da adaptação forem inválidos
+     * @throws ResourceNotFoundException se a adaptação não for encontrada
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para atualizar adaptações
+     */
     @Operation(
         summary = "Atualizar adaptação",
         description = "Atualiza uma adaptação existente com novos dados"
@@ -150,6 +216,18 @@ public class AdaptationController {
         return ResponseEntity.ok(svc.update(id, dto));
     }
 
+    /**
+     * Remove uma adaptação do sistema.
+     * 
+     * Este endpoint permite excluir permanentemente uma adaptação,
+     * removendo-a do sistema e suas associações com usuários.
+     * 
+     * @param id ID da adaptação a ser excluída
+     * @return ResponseEntity vazio com status 204 (No Content)
+     * @throws ResourceNotFoundException se a adaptação não for encontrada
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para excluir adaptações
+     */
     @Operation(
         summary = "Excluir adaptação",
         description = "Remove uma adaptação do sistema"

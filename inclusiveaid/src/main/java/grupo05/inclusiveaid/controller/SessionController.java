@@ -16,8 +16,20 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controlador para gerenciamento de sessões de usuários no sistema AID.
+ * Controlador responsável pelo gerenciamento de sessões de usuários no sistema InclusiveAID.
  * Fornece endpoints para criar, recuperar, listar e encerrar sessões de usuários.
+ * 
+ * Este controlador permite:
+ * - Criar novas sessões para usuários
+ * - Consultar sessões existentes
+ * - Listar todas as sessões de forma paginada
+ * - Encerrar sessões ativas
+ * 
+ * As sessões são utilizadas para controlar o acesso dos usuários ao sistema
+ * e manter o estado de suas interações com as funcionalidades de acessibilidade.
+ * 
+ * @author Grupo 05
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/api/sessions")
@@ -26,6 +38,18 @@ import org.springframework.web.bind.annotation.*;
 public class SessionController {
     private final SessionService svc;
 
+    /**
+     * Cria uma nova sessão para um usuário no sistema.
+     * 
+     * Este endpoint permite iniciar uma nova sessão para um usuário,
+     * registrando informações como data/hora de início e configurações
+     * de acessibilidade específicas para a sessão.
+     * 
+     * @param dto Dados da sessão a ser criada
+     * @return ResponseEntity contendo os dados da sessão criada
+     * @throws ValidationException se os dados da sessão forem inválidos
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Criar sessão",
         description = "Cria uma nova sessão para um usuário no sistema"
@@ -54,6 +78,17 @@ public class SessionController {
         return ResponseEntity.ok(svc.create(dto));
     }
 
+    /**
+     * Recupera uma sessão específica pelo seu ID.
+     * 
+     * Este endpoint permite consultar os detalhes de uma sessão específica,
+     * incluindo informações sobre o usuário e suas configurações de acessibilidade.
+     * 
+     * @param id ID da sessão a ser recuperada
+     * @return ResponseEntity contendo os dados da sessão
+     * @throws ResourceNotFoundException se a sessão não for encontrada
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Obter sessão por ID",
         description = "Recupera uma sessão específica pelo seu ID"
@@ -82,6 +117,17 @@ public class SessionController {
         return ResponseEntity.ok(svc.getById(id));
     }
 
+    /**
+     * Lista todas as sessões do sistema de forma paginada.
+     * 
+     * Este endpoint permite consultar todas as sessões registradas,
+     * com suporte a paginação para melhor performance.
+     * 
+     * @param page Número da página (começando em 0)
+     * @param size Quantidade de itens por página
+     * @return ResponseEntity contendo a página de sessões
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     */
     @Operation(
         summary = "Listar todas as sessões",
         description = "Recupera uma lista paginada de todas as sessões no sistema"
@@ -108,6 +154,19 @@ public class SessionController {
         return ResponseEntity.ok(svc.listAll(page, size));
     }
 
+    /**
+     * Encerra uma sessão ativa no sistema.
+     * 
+     * Este endpoint permite encerrar uma sessão específica,
+     * registrando a data/hora de término e finalizando as
+     * interações do usuário com o sistema.
+     * 
+     * @param id ID da sessão a ser encerrada
+     * @return ResponseEntity vazio com status 204 (No Content)
+     * @throws ResourceNotFoundException se a sessão não for encontrada
+     * @throws UnauthorizedException se o usuário não estiver autenticado
+     * @throws AccessDeniedException se o usuário não tiver permissão para encerrar a sessão
+     */
     @Operation(
         summary = "Encerrar sessão",
         description = "Encerra uma sessão ativa no sistema"

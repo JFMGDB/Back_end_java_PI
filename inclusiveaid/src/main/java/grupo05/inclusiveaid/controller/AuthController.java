@@ -15,8 +15,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controlador responsável pela autenticação e registro de usuários.
- * Gerencia o processo de login e cadastro de novos usuários.
+ * Controlador responsável pela autenticação e registro de usuários no sistema InclusiveAID.
+ * Gerencia o processo de login e cadastro de novos usuários, fornecendo endpoints seguros
+ * para autenticação e geração de tokens JWT.
+ * 
+ * Este controlador implementa as operações básicas de autenticação, incluindo:
+ * - Login de usuários
+ * - Geração de tokens JWT
+ * - Validação de credenciais
+ * 
+ * @author Grupo 05
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -26,6 +35,18 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authService;
 
+    /**
+     * Autentica um usuário no sistema e retorna um token JWT para autenticação subsequente.
+     * 
+     * Este endpoint recebe as credenciais do usuário (email e senha) e, se válidas,
+     * retorna um token JWT que deve ser incluído no cabeçalho Authorization das
+     * requisições subsequentes.
+     * 
+     * @param req Objeto contendo as credenciais do usuário (email e senha)
+     * @return ResponseEntity contendo o token JWT e informações do usuário autenticado
+     * @throws UnauthorizedException se as credenciais forem inválidas
+     * @throws ValidationException se o formato da requisição for inválido
+     */
     @Operation(
         summary = "Authenticate user",
         description = "Authenticates a user and returns a JWT token for subsequent requests"
