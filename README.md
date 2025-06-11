@@ -101,19 +101,84 @@ Para testar endpoints protegidos:
 | Recurso | Método | Caminho | Descrição |
 |---------|--------|---------|-----------|
 | Auth | POST | /api/auth/login | Gera JWT a partir de email+senha |
+| Auth | POST | /api/auth/register | Registra novo usuário |
+| Auth | POST | /api/auth/refresh-token | Renova token JWT |
+| AIAgent | GET | /api/ai-agents | Lista todos os agentes de IA |
+| AIAgent | POST | /api/ai-agents | Cria novo agente de IA |
+| AIAgent | GET | /api/ai-agents/{id} | Busca agente por ID |
+| AIAgent | PUT | /api/ai-agents/{id} | Atualiza agente |
+| AIAgent | DELETE | /api/ai-agents/{id} | Remove agente |
+| AIAgent | POST | /api/ai-agents/{agentId}/users/{userId}/voice-command | Processa comando de voz do usuário |
+| AIAgent | POST | /api/ai-agents/{agentId}/users/{userId}/analyze-layout | Analisa layout para o usuário |
+| AIAgent | POST | /api/ai-agents/{agentId}/users/{userId}/suggest | Gera sugestões proativas |
+| AIAgent | POST | /api/ai-agents/{agentId}/users/{userId}/translate-libras | Traduz conteúdo para Libras |
 | Users | GET | /api/users | Lista usuários (paginado) |
-| | POST | /api/users | Cria novo usuário |
-| | GET | /api/users/{id} | Busca usuário por ID |
-| | PUT | /api/users/{id} | Atualiza usuário |
-| | DELETE | /api/users/{id} | Remove usuário |
-| DisabilityTypes | * | /api/disability-types/** | CRUD tipos de deficiência |
-| Adaptations | * | /api/adaptations/** | CRUD adaptações |
-| Feedbacks | * | /api/feedbacks/** | CRUD feedbacks |
-| Sessions | * | /api/sessions/** | CRUD sessões |
-| LayoutAnalyses | * | /api/layout-analyses/** | CRUD análises de layout |
-| Suggestions | * | /api/suggestions/** | CRUD sugestões proativas |
-| Subtitles | * | /api/subtitles/** | CRUD legendas em tempo real |
-| VoiceCommands | * | /api/voice-commands/** | CRUD comandos de voz |
+| Users | POST | /api/users | Cria novo usuário |
+| Users | GET | /api/users/{id} | Busca usuário por ID |
+| Users | PUT | /api/users/{id} | Atualiza usuário |
+| Users | DELETE | /api/users/{id} | Remove usuário |
+| Users | GET | /api/users/{id}/sessions | Lista sessões do usuário |
+| Users | GET | /api/users/{id}/adaptations | Lista adaptações do usuário |
+| Responsible | GET | /api/responsibles | Lista responsáveis |
+| Responsible | POST | /api/responsibles | Cria novo responsável |
+| Responsible | GET | /api/responsibles/{id} | Busca responsável por ID |
+| Responsible | PUT | /api/responsibles/{id} | Atualiza responsável |
+| Responsible | DELETE | /api/responsibles/{id} | Remove responsável |
+| Task | GET | /api/tasks | Lista tarefas |
+| Task | POST | /api/tasks | Cria nova tarefa |
+| Task | GET | /api/tasks/{id} | Busca tarefa por ID |
+| Task | PUT | /api/tasks/{id} | Atualiza tarefa |
+| Task | DELETE | /api/tasks/{id} | Remove tarefa |
+| Permissions | GET | /api/permissions | Lista permissões |
+| Permissions | POST | /api/permissions | Cria nova permissão |
+| Permissions | GET | /api/permissions/{id} | Busca permissão por ID |
+| Permissions | PUT | /api/permissions/{id} | Atualiza permissão |
+| Permissions | DELETE | /api/permissions/{id} | Remove permissão |
+| DisabilityTypes | GET | /api/disability-types | Lista tipos de deficiência |
+| DisabilityTypes | POST | /api/disability-types | Cria novo tipo |
+| DisabilityTypes | GET | /api/disability-types/{id} | Busca tipo por ID |
+| DisabilityTypes | PUT | /api/disability-types/{id} | Atualiza tipo |
+| DisabilityTypes | DELETE | /api/disability-types/{id} | Remove tipo |
+| Adaptations | GET | /api/adaptations | Lista adaptações |
+| Adaptations | POST | /api/adaptations | Cria nova adaptação |
+| Adaptations | GET | /api/adaptations/{id} | Busca adaptação por ID |
+| Adaptations | PUT | /api/adaptations/{id} | Atualiza adaptação |
+| Adaptations | DELETE | /api/adaptations/{id} | Remove adaptação |
+| LibrasTranslation | GET | /api/libras-translations | Lista traduções |
+| LibrasTranslation | POST | /api/libras-translations | Cria nova tradução |
+| LibrasTranslation | GET | /api/libras-translations/{id} | Busca tradução por ID |
+| LibrasTranslation | PUT | /api/libras-translations/{id} | Atualiza tradução |
+| LibrasTranslation | DELETE | /api/libras-translations/{id} | Remove tradução |
+| Sessions | GET | /api/sessions | Lista sessões |
+| Sessions | POST | /api/sessions | Cria nova sessão |
+| Sessions | GET | /api/sessions/{id} | Busca sessão por ID |
+| Sessions | PUT | /api/sessions/{id} | Atualiza sessão |
+| Sessions | DELETE | /api/sessions/{id} | Remove sessão |
+| LayoutAnalyses | GET | /api/layout-analyses | Lista análises |
+| LayoutAnalyses | POST | /api/layout-analyses | Cria nova análise |
+| LayoutAnalyses | GET | /api/layout-analyses/{id} | Busca análise por ID |
+| LayoutAnalyses | PUT | /api/layout-analyses/{id} | Atualiza análise |
+| LayoutAnalyses | DELETE | /api/layout-analyses/{id} | Remove análise |
+| Suggestions | GET | /api/suggestions | Lista sugestões |
+| Suggestions | POST | /api/suggestions | Cria nova sugestão |
+| Suggestions | GET | /api/suggestions/{id} | Busca sugestão por ID |
+| Suggestions | PUT | /api/suggestions/{id} | Atualiza sugestão |
+| Suggestions | DELETE | /api/suggestions/{id} | Remove sugestão |
+| Subtitles | GET | /api/subtitles | Lista legendas |
+| Subtitles | POST | /api/subtitles | Cria nova legenda |
+| Subtitles | GET | /api/subtitles/{id} | Busca legenda por ID |
+| Subtitles | PUT | /api/subtitles/{id} | Atualiza legenda |
+| Subtitles | DELETE | /api/subtitles/{id} | Remove legenda |
+| VoiceCommands | GET | /api/voice-commands | Lista comandos |
+| VoiceCommands | POST | /api/voice-commands | Cria novo comando |
+| VoiceCommands | GET | /api/voice-commands/{id} | Busca comando por ID |
+| VoiceCommands | PUT | /api/voice-commands/{id} | Atualiza comando |
+| VoiceCommands | DELETE | /api/voice-commands/{id} | Remove comando |
+| Feedbacks | GET | /api/feedbacks | Lista feedbacks |
+| Feedbacks | POST | /api/feedbacks | Cria novo feedback |
+| Feedbacks | GET | /api/feedbacks/{id} | Busca feedback por ID |
+| Feedbacks | PUT | /api/feedbacks/{id} | Atualiza feedback |
+| Feedbacks | DELETE | /api/feedbacks/{id} | Remove feedback |
 
 *Para cada recurso, o padrão CRUD é aplicado:
 - GET / - Lista (com paginação)
