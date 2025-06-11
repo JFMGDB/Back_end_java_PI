@@ -1,13 +1,12 @@
 package grupo05.inclusiveaid.service;
 
+import grupo05.inclusiveaid.dto.ResponsibleDTO;
 import java.util.List;
 
-import grupo05.inclusiveaid.entity.Responsible;
-
 public interface ResponsibleService {
-    List<Responsible> getAllResponsibles();
-    Responsible getResponsiblebyId(Long id);
-    Responsible createResponsible(Responsible responsible);
-    Responsible updateResponsible(Long id, Responsible updateResponsible);
+    List<ResponsibleDTO> getAllResponsibles();
+    ResponsibleDTO getResponsibleById(Long id);
+    ResponsibleDTO createResponsible(ResponsibleDTO responsibleDTO);
+    ResponsibleDTO updateResponsible(Long id, ResponsibleDTO responsibleDTO);
     void deleteResponsible(Long id);
 }

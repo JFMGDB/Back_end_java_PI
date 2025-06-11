@@ -10,5 +10,6 @@ public interface SubtitleService {
   SubtitleDTO create(SubtitleDTO dto);
   SubtitleDTO getById(Long id);
   Page<SubtitleDTO> listAll(int page,int size);
+  SubtitleDTO update(Long id, SubtitleDTO dto);
   void delete(Long id);
 }

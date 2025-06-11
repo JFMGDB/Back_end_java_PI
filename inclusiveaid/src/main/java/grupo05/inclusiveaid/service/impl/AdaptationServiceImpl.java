@@ -5,11 +5,12 @@ import grupo05.inclusiveaid.entity.Adaptation;
 import grupo05.inclusiveaid.exception.ResourceNotFoundException;
 import grupo05.inclusiveaid.mapper.AdaptationMapper;
 import grupo05.inclusiveaid.repository.AdaptationRepository;
-import grupo05.inclusiveaid.repository.DisabilityTypeRepository;
 import grupo05.inclusiveaid.service.AdaptationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementação de AdaptationService.
@@ -17,42 +18,47 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AdaptationServiceImpl implements AdaptationService {
-  private final AdaptationRepository repo;
-  private final AdaptationMapper mapper;
-  private final DisabilityTypeRepository dtRepo;
+    private final AdaptationRepository adaptationRepository;
+    private final AdaptationMapper adaptationMapper;
 
-  @Override
-  public AdaptationDTO create(AdaptationDTO dto) {
-    // garante que disabilityType existe
-    dtRepo.findById(dto.getDisabilityTypeId())
-      .orElseThrow(() -> new ResourceNotFoundException("DisabilityType não encontrado"));
-    return mapper.toDto(repo.save(mapper.toEntity(dto)));
-  }
+    @Override
+    @Transactional(readOnly = true)
+    public Page<AdaptationDTO> listAll(int page, int size) {
+        return adaptationRepository.findAll(PageRequest.of(page, size))
+                .map(adaptationMapper::toDto);
+    }
 
-  @Override
-  public AdaptationDTO getById(Long id) {
-    return mapper.toDto(repo.findById(id)
-      .orElseThrow(() -> new ResourceNotFoundException("Adaptation não encontrado")));
-  }
+    @Override
+    @Transactional(readOnly = true)
+    public AdaptationDTO getById(Long id) {
+        return adaptationRepository.findById(id)
+                .map(adaptationMapper::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Adaptation not found with id: " + id));
+    }
 
-  @Override
-  public Page<AdaptationDTO> listAll(int page,int size) {
-    return repo.findAll(PageRequest.of(page,size)).map(mapper::toDto);
-  }
+    @Override
+    @Transactional
+    public AdaptationDTO create(AdaptationDTO adaptationDTO) {
+        Adaptation adaptation = adaptationMapper.toEntity(adaptationDTO);
+        Adaptation savedAdaptation = adaptationRepository.save(adaptation);
+        return adaptationMapper.toDto(savedAdaptation);
+    }
 
-  @Override
-  public AdaptationDTO update(Long id,AdaptationDTO dto) {
-    Adaptation e = repo.findById(id)
-      .orElseThrow(() -> new ResourceNotFoundException("Adaptation não encontrado"));
-    e.setName(dto.getName());
-    e.setDescription(dto.getDescription());
-    return mapper.toDto(repo.save(e));
-  }
+    @Override
+    @Transactional
+    public AdaptationDTO update(Long id, AdaptationDTO adaptationDTO) {
+        Adaptation adaptation = adaptationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Adaptation not found with id: " + id));
+        adaptationMapper.updateEntity(adaptationDTO, adaptation);
+        return adaptationMapper.toDto(adaptationRepository.save(adaptation));
+    }
 
-  @Override
-  public void delete(Long id) {
-    if (!repo.existsById(id))
-      throw new ResourceNotFoundException("Adaptation não encontrado");
-    repo.deleteById(id);
-  }
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        if (!adaptationRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Adaptation not found with id: " + id);
+        }
+        adaptationRepository.deleteById(id);
+    }
 }

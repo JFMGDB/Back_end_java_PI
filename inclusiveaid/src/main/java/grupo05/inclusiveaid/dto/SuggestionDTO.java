@@ -9,11 +9,13 @@ import jakarta.validation.constraints.*;
 @Data @Builder
 public class SuggestionDTO {
   public interface Create {}
+  public interface Update {}
+  
   private Long id;
 
   @NotNull(groups = Create.class)
   private Long layoutAnalysisId;
 
-  @NotBlank(groups = Create.class)
+  @NotBlank(groups = {Create.class, Update.class})
   private String message;
 }

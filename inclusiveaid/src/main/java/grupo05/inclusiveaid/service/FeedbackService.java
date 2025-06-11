@@ -10,5 +10,6 @@ public interface FeedbackService {
   FeedbackDTO create(FeedbackDTO dto);
   FeedbackDTO getById(Long id);
   Page<FeedbackDTO> listAll(int page,int size);
+  FeedbackDTO update(Long id, FeedbackDTO dto);
   void delete(Long id);
 }

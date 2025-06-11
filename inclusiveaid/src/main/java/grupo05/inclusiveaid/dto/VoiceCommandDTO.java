@@ -10,12 +10,14 @@ import java.time.Instant;
 @Data @Builder
 public class VoiceCommandDTO {
   public interface Create {}
+  public interface Update {}
+  
   private Long id;
 
   @NotNull(groups = Create.class)
   private Long sessionId;
 
-  @NotBlank(groups = Create.class)
+  @NotBlank(groups = {Create.class, Update.class})
   private String command;
 
   private String result;

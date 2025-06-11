@@ -1,100 +1,107 @@
-DROP TABLE IF EXISTS user_disability_types, voice_commands, subtitles, suggestions, layout_analyses, sessions, feedbacks, user_adaptation_settings, layout_elements, adaptations, users, disability_types, roles;
+DROP TABLE IF EXISTS agent_active_users CASCADE;
+DROP TABLE IF EXISTS agent_interactions CASCADE;
+DROP TABLE IF EXISTS disability_specific_configs CASCADE;
+DROP TABLE IF EXISTS user_disability_types CASCADE;
+DROP TABLE IF EXISTS user_adaptation_settings CASCADE;
+DROP TABLE IF EXISTS ai_agents CASCADE;
+DROP TABLE IF EXISTS usuarios CASCADE;
+DROP TABLE IF EXISTS roles CASCADE;
+DROP TABLE IF EXISTS disability_types CASCADE;
 
 CREATE TABLE roles (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(50)
+  name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE usuarios (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  role_id BIGINT NOT NULL,
+  FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
 CREATE TABLE disability_types (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100),
-  description VARCHAR(255)
+  name VARCHAR(50) NOT NULL UNIQUE,
+  description TEXT
 );
 
-CREATE TABLE users (
+CREATE TABLE ai_agents (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100),
-  email VARCHAR(100) UNIQUE,
-  password VARCHAR(255),
-  role_id BIGINT,
-  FOREIGN KEY(role_id) REFERENCES roles(id)
+  name VARCHAR(100) NOT NULL,
+  version VARCHAR(20) NOT NULL,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  last_update TIMESTAMP NOT NULL,
+  nlp_config_language_model VARCHAR(100),
+  nlp_config_confidence_threshold DOUBLE,
+  nlp_config_enable_context_awareness BOOLEAN,
+  image_config_object_detection_model VARCHAR(100),
+  image_config_detection_threshold DOUBLE,
+  image_config_enable_ocr BOOLEAN,
+  voice_config_speech_recognition_model VARCHAR(100),
+  voice_config_recognition_threshold DOUBLE,
+  voice_config_enable_noise_reduction BOOLEAN
+);
+
+CREATE TABLE agent_active_users (
+  agent_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  PRIMARY KEY (agent_id, user_id),
+  FOREIGN KEY (agent_id) REFERENCES ai_agents(id),
+  FOREIGN KEY (user_id) REFERENCES usuarios(id)
+);
+
+CREATE TABLE agent_interactions (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  agent_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  type VARCHAR(50) NOT NULL,
+  action TEXT NOT NULL,
+  response TEXT,
+  timestamp TIMESTAMP NOT NULL,
+  successful BOOLEAN NOT NULL DEFAULT true,
+  FOREIGN KEY (agent_id) REFERENCES ai_agents(id),
+  FOREIGN KEY (user_id) REFERENCES usuarios(id)
+);
+
+CREATE TABLE disability_specific_configs (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  agent_id BIGINT NOT NULL,
+  disability_type_id BIGINT NOT NULL,
+  enable_screen_reader BOOLEAN DEFAULT false,
+  enable_high_contrast BOOLEAN DEFAULT false,
+  enable_image_description BOOLEAN DEFAULT false,
+  enable_subtitles BOOLEAN DEFAULT false,
+  enable_visual_alerts BOOLEAN DEFAULT false,
+  enable_sign_language BOOLEAN DEFAULT false,
+  enable_voice_commands BOOLEAN DEFAULT false,
+  enable_gesture_recognition BOOLEAN DEFAULT false,
+  enable_task_automation BOOLEAN DEFAULT false,
+  enable_simplified_mode BOOLEAN DEFAULT false,
+  enable_consistent_feedback BOOLEAN DEFAULT false,
+  enable_reduced_stimuli BOOLEAN DEFAULT false,
+  enable_step_by_step_guide BOOLEAN DEFAULT false,
+  enable_content_summarization BOOLEAN DEFAULT false,
+  enable_visual_guidance BOOLEAN DEFAULT false,
+  custom_settings TEXT,
+  FOREIGN KEY (agent_id) REFERENCES ai_agents(id),
+  FOREIGN KEY (disability_type_id) REFERENCES disability_types(id)
 );
 
 CREATE TABLE user_disability_types (
-  user_id BIGINT,
-  disability_type_id BIGINT,
-  PRIMARY KEY(user_id,disability_type_id),
-  FOREIGN KEY(user_id) REFERENCES users(id),
-  FOREIGN KEY(disability_type_id) REFERENCES disability_types(id)
-);
-
-CREATE TABLE adaptations (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100),
-  description VARCHAR(255),
-  disability_type_id BIGINT,
-  FOREIGN KEY(disability_type_id) REFERENCES disability_types(id)
+  user_id BIGINT NOT NULL,
+  disability_type_id BIGINT NOT NULL,
+  PRIMARY KEY (user_id, disability_type_id),
+  FOREIGN KEY (user_id) REFERENCES usuarios(id),
+  FOREIGN KEY (disability_type_id) REFERENCES disability_types(id)
 );
 
 CREATE TABLE user_adaptation_settings (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  user_id BIGINT,
-  adaptation_id BIGINT,
-  enabled BOOLEAN,
-  FOREIGN KEY(user_id) REFERENCES users(id),
-  FOREIGN KEY(adaptation_id) REFERENCES adaptations(id)
-);
-
-CREATE TABLE layout_elements (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  element_type VARCHAR(50),
-  description VARCHAR(255),
-  xpath VARCHAR(255)
-);
-
-CREATE TABLE feedbacks (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  user_id BIGINT,
-  message VARCHAR(500),
-  timestamp TIMESTAMP,
-  FOREIGN KEY(user_id) REFERENCES users(id)
-);
-
-CREATE TABLE sessions (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  user_id BIGINT,
-  started_at TIMESTAMP,
-  ended_at TIMESTAMP,
-  FOREIGN KEY(user_id) REFERENCES users(id)
-);
-
-CREATE TABLE layout_analyses (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  session_id BIGINT,
-  details TEXT,
-  FOREIGN KEY(session_id) REFERENCES sessions(id)
-);
-
-CREATE TABLE suggestions (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  layout_analysis_id BIGINT,
-  message VARCHAR(500),
-  FOREIGN KEY(layout_analysis_id) REFERENCES layout_analyses(id)
-);
-
-CREATE TABLE subtitles (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  session_id BIGINT,
-  text VARCHAR(500),
-  timestamp TIMESTAMP,
-  FOREIGN KEY(session_id) REFERENCES sessions(id)
-);
-
-CREATE TABLE voice_commands (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  session_id BIGINT,
-  command VARCHAR(255),
-  result VARCHAR(255),
-  timestamp TIMESTAMP,
-  FOREIGN KEY(session_id) REFERENCES sessions(id)
+  user_id BIGINT NOT NULL,
+  setting_key VARCHAR(100) NOT NULL,
+  setting_value TEXT,
+  FOREIGN KEY (user_id) REFERENCES usuarios(id)
 );

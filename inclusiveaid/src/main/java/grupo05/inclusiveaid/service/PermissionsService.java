@@ -1,13 +1,45 @@
 package grupo05.inclusiveaid.service;
 
-import java.util.List;
+import grupo05.inclusiveaid.dto.PermissionsDTO;
+import org.springframework.data.domain.Page;
 
-import grupo05.inclusiveaid.entity.Permissions;
-
+/**
+ * Interface que define os serviços relacionados às permissões de usuários.
+ */
 public interface PermissionsService {
-    Permissions creatPermissions(Permissions permisions);
-    Permissions updatePermissions(Permissions permisions, Long id);
-    List<Permissions> getAllPermissions();
-    Permissions getPermissionsById(Long id);
-    void deletePermissionsById(Long id);
+    /**
+     * Cria uma nova permissão.
+     * @param dto DTO contendo os dados da permissão
+     * @return DTO da permissão criada
+     */
+    PermissionsDTO create(PermissionsDTO dto);
+
+    /**
+     * Recupera uma permissão pelo seu ID.
+     * @param id ID da permissão
+     * @return DTO da permissão encontrada
+     */
+    PermissionsDTO getById(Long id);
+
+    /**
+     * Lista todas as permissões de forma paginada.
+     * @param page Número da página (começa em 0)
+     * @param size Tamanho da página
+     * @return Página de DTOs de permissões
+     */
+    Page<PermissionsDTO> listAll(int page, int size);
+
+    /**
+     * Atualiza uma permissão existente.
+     * @param id ID da permissão a ser atualizada
+     * @param dto DTO contendo os novos dados da permissão
+     * @return DTO da permissão atualizada
+     */
+    PermissionsDTO update(Long id, PermissionsDTO dto);
+
+    /**
+     * Remove uma permissão do sistema.
+     * @param id ID da permissão a ser removida
+     */
+    void delete(Long id);
 }

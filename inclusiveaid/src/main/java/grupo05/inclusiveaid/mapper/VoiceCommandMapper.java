@@ -15,4 +15,9 @@ public interface VoiceCommandMapper {
   @Mapping(target="id",ignore=true)
   @Mapping(source="sessionId",target="session.id")
   VoiceCommand toEntity(VoiceCommandDTO dto);
+
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "timestamp", ignore = true)
+  @Mapping(target = "session", ignore = true)
+  void updateEntity(VoiceCommandDTO dto, @MappingTarget VoiceCommand entity);
 }

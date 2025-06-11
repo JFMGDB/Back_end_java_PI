@@ -40,6 +40,17 @@ public class SubtitleServiceImpl implements SubtitleService {
   }
 
   @Override
+  public SubtitleDTO update(Long id, SubtitleDTO dto) {
+    var subtitle = repo.findById(id)
+      .orElseThrow(() -> new ResourceNotFoundException("Subtitle não encontrada"));
+    
+    subtitle.setText(dto.getText());
+    // Não atualizamos o timestamp pois é um campo que deve manter o valor original
+    
+    return mapper.toDto(repo.save(subtitle));
+  }
+
+  @Override
   public void delete(Long id) {
     if (!repo.existsById(id))
       throw new ResourceNotFoundException("Subtitle não encontrada");

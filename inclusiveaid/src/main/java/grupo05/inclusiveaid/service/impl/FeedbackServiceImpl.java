@@ -42,6 +42,22 @@ public class FeedbackServiceImpl implements FeedbackService {
   }
 
   @Override
+  public FeedbackDTO update(Long id, FeedbackDTO dto) {
+    var existingFeedback = repo.findById(id)
+      .orElseThrow(() -> new ResourceNotFoundException("Feedback não encontrado"));
+    
+    // garante que usuário existe
+    userRepo.findById(dto.getUserId())
+      .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+    
+    var feedback = mapper.toEntity(dto);
+    feedback.setId(id);
+    feedback.setTimestamp(existingFeedback.getTimestamp()); // mantém timestamp original
+    
+    return mapper.toDto(repo.save(feedback));
+  }
+
+  @Override
   public void delete(Long id) {
     if (!repo.existsById(id))
       throw new ResourceNotFoundException("Feedback não encontrado");

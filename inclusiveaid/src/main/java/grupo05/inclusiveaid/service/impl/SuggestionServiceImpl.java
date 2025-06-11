@@ -39,6 +39,24 @@ public class SuggestionServiceImpl implements SuggestionService {
   }
 
   @Override
+  public SuggestionDTO update(Long id, SuggestionDTO dto) {
+    var suggestion = repo.findById(id)
+      .orElseThrow(() -> new ResourceNotFoundException("Suggestion não encontrada"));
+    
+    if (dto.getLayoutAnalysisId() != null) {
+      laRepo.findById(dto.getLayoutAnalysisId())
+        .orElseThrow(() -> new ResourceNotFoundException("LayoutAnalysis não encontrada"));
+    }
+    
+    suggestion.setMessage(dto.getMessage());
+    if (dto.getLayoutAnalysisId() != null) {
+      suggestion.getAnalysis().setId(dto.getLayoutAnalysisId());
+    }
+    
+    return mapper.toDto(repo.save(suggestion));
+  }
+
+  @Override
   public void delete(Long id) {
     if (!repo.existsById(id))
       throw new ResourceNotFoundException("Suggestion não encontrada");

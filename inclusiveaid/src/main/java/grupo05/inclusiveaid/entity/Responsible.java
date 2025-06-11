@@ -35,7 +35,9 @@ public class Responsible {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
+    private String phone;
+
     @OneToOne
     @JoinColumn(name = "id_user")
     private User user;

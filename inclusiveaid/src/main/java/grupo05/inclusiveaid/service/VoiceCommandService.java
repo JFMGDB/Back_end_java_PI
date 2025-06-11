@@ -11,4 +11,5 @@ public interface VoiceCommandService {
   VoiceCommandDTO getById(Long id);
   Page<VoiceCommandDTO> listAll(int page,int size);
   void delete(Long id);
+  VoiceCommandDTO update(Long id, VoiceCommandDTO dto);
 }

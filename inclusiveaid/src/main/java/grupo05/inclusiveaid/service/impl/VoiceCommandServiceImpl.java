@@ -1,6 +1,7 @@
 package grupo05.inclusiveaid.service.impl;
 
 import grupo05.inclusiveaid.dto.VoiceCommandDTO;
+import grupo05.inclusiveaid.entity.VoiceCommand;
 import grupo05.inclusiveaid.exception.ResourceNotFoundException;
 import grupo05.inclusiveaid.mapper.VoiceCommandMapper;
 import grupo05.inclusiveaid.repository.SessionRepository;
@@ -45,5 +46,19 @@ public class VoiceCommandServiceImpl implements VoiceCommandService {
     if (!repo.existsById(id))
       throw new ResourceNotFoundException("VoiceCommand não encontrado");
     repo.deleteById(id);
+  }
+
+  @Override
+  public VoiceCommandDTO update(Long id, VoiceCommandDTO dto) {
+    VoiceCommand existingCommand = repo.findById(id)
+      .orElseThrow(() -> new ResourceNotFoundException("VoiceCommand não encontrado"));
+    
+    // Preserve the original timestamp
+    dto.setTimestamp(existingCommand.getTimestamp());
+    
+    // Update the entity with new values
+    mapper.updateEntity(dto, existingCommand);
+    
+    return mapper.toDto(repo.save(existingCommand));
   }
 }

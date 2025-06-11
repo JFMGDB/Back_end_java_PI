@@ -8,35 +8,31 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+/**
+ * Entidade que representa uma permissão no sistema.
+ * Contém informações sobre as permissões que podem ser atribuídas aos usuários.
+ */
+@Data
 @Entity
-@Table(name = "permissions")
-@Getter
-@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Table(name = "permissions")
 public class Permissions {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = true)
-    private Boolean agenda; 
     
-    @Column(nullable = true)
-    private Boolean storage;
-
-    @Column(nullable = true)
-    private Boolean camera;
-
-    @Column(nullable = true)
-    private Boolean contact;
+    @Column(nullable = false, unique = true)
+    private String name;
     
-    @Column(nullable = true)
-    private Boolean location;
+    @Column(nullable = false)
+    private String description;
     
+    @Column(nullable = false)
+    private Boolean active;
 }

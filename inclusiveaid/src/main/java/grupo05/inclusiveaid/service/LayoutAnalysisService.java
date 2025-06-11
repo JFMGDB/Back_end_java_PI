@@ -10,5 +10,6 @@ public interface LayoutAnalysisService {
   LayoutAnalysisDTO create(LayoutAnalysisDTO dto);
   LayoutAnalysisDTO getById(Long id);
   Page<LayoutAnalysisDTO> listAll(int page,int size);
+  LayoutAnalysisDTO update(Long id, LayoutAnalysisDTO dto);
   void delete(Long id);
 }

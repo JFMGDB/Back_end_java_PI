@@ -1,12 +1,31 @@
-INSERT INTO roles (name) VALUES ('ROLE_USER'),('ROLE_ADMIN');
+-- Insert default roles
+INSERT INTO roles (name) VALUES ('ROLE_USER') ON CONFLICT DO NOTHING;
+INSERT INTO roles (name) VALUES ('ROLE_ADMIN') ON CONFLICT DO NOTHING;
 
-INSERT INTO disability_types (name,description) VALUES
-  ('VISUAL','Deficiência visual'),
-  ('AUDITIVA','Deficiência auditiva'),
-  ('MOTORA','Deficiência motora'),
-  ('COGNITIVA','Deficiência cognitiva'),
-  ('TEA','Transtorno do Espectro Autista'),
-  ('SENSORIAL','Deficiência sensorial');
+-- Insert default admin user (password: admin123)
+INSERT INTO usuarios (name, email, password, role_id)
+VALUES ('Admin', 'admin@inclusiveaid.com', '$2a$10$rDkPvvAFV6GgJkKq8WU1UOQZQZQZQZQZQZQZQZQZQZQZQZQZQZQZQ', 
+        (SELECT id FROM roles WHERE name = 'ROLE_ADMIN'))
+ON CONFLICT (email) DO NOTHING;
+
+-- Insert default disability types
+INSERT INTO disability_types (name, description) VALUES 
+('Visual', 'Visual impairments including blindness and low vision'),
+('Auditiva', 'Hearing impairments including deafness and hard of hearing'),
+('Motora', 'Motor impairments affecting movement and coordination'),
+('Cognitiva', 'Cognitive impairments affecting learning and understanding'),
+('TEA', 'Transtorno do Espectro Autista')
+ON CONFLICT DO NOTHING;
+
+-- Insert default AI agent configuration
+INSERT INTO ai_agents (name, version, is_active, last_update, nlp_config_language_model, nlp_config_confidence_threshold, nlp_config_enable_context_awareness,
+                      image_config_object_detection_model, image_config_detection_threshold, image_config_enable_ocr,
+                      voice_config_speech_recognition_model, voice_config_recognition_threshold, voice_config_enable_noise_reduction)
+VALUES ('Default Agent', '1.0.0', true, CURRENT_TIMESTAMP,
+        'gpt-3.5-turbo', 0.8, true,
+        'yolov5', 0.7, true,
+        'whisper', 0.75, true)
+ON CONFLICT DO NOTHING;
 
 INSERT INTO users (name,email,password,role_id) VALUES
   ('Maria','maria@ex.com','$2a$10$hash','1');
