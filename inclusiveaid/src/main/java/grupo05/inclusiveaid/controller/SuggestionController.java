@@ -16,157 +16,188 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller for managing accessibility suggestions in the AID system.
- * Provides endpoints for creating, retrieving, listing, and deleting suggestions for improving digital accessibility.
+ * Controlador responsável pelo gerenciamento de sugestões de acessibilidade no sistema AID.
+ * Fornece endpoints para criar, recuperar, listar, atualizar e excluir sugestões para melhoria da acessibilidade digital.
  */
 @RestController
 @RequestMapping("/api/suggestions")
 @RequiredArgsConstructor
-@Tag(name = "Suggestion", description = "APIs for managing accessibility suggestions in the AID system")
+@Tag(name = "Sugestão", description = "APIs para gerenciamento de sugestões de acessibilidade no sistema AID")
 public class SuggestionController {
     private final SuggestionService svc;
 
+    /**
+     * Cria uma nova sugestão de acessibilidade.
+     *
+     * @param dto Dados da sugestão a ser criada
+     * @return ResponseEntity contendo a sugestão criada
+     */
     @Operation(
-        summary = "Create suggestion",
-        description = "Creates a new suggestion for improving accessibility features"
+        summary = "Criar sugestão",
+        description = "Cria uma nova sugestão para melhoria de recursos de acessibilidade"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully created the suggestion",
+            description = "Sugestão criada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = SuggestionDTO.class))
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid input - The suggestion data is invalid"
+            description = "Entrada inválida - Os dados da sugestão estão inválidos"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @PostMapping
     public ResponseEntity<SuggestionDTO> create(
-        @Parameter(description = "Suggestion data to create", required = true)
+        @Parameter(description = "Dados da sugestão para criar", required = true)
         @Validated(SuggestionDTO.Create.class) @RequestBody SuggestionDTO dto
     ) {
         return ResponseEntity.ok(svc.create(dto));
     }
 
+    /**
+     * Recupera uma sugestão específica pelo ID.
+     *
+     * @param id ID da sugestão
+     * @return ResponseEntity contendo a sugestão
+     */
     @Operation(
-        summary = "Get suggestion by ID",
-        description = "Retrieves a specific suggestion by its ID"
+        summary = "Obter sugestão por ID",
+        description = "Recupera uma sugestão específica pelo seu ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved the suggestion",
+            description = "Sugestão recuperada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = SuggestionDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Suggestion not found"
+            description = "Sugestão não encontrada"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @GetMapping("/{id}")
     public ResponseEntity<SuggestionDTO> get(
-        @Parameter(description = "ID of the suggestion to retrieve", required = true)
+        @Parameter(description = "ID da sugestão para recuperar", required = true)
         @PathVariable Long id
     ) {
         return ResponseEntity.ok(svc.getById(id));
     }
 
+    /**
+     * Lista todas as sugestões do sistema de forma paginada.
+     *
+     * @param page Número da página
+     * @param size Quantidade de itens por página
+     * @return Página de sugestões
+     */
     @Operation(
-        summary = "List all suggestions",
-        description = "Retrieves a paginated list of all suggestions in the system"
+        summary = "Listar todas as sugestões",
+        description = "Recupera uma lista paginada de todas as sugestões no sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved the list of suggestions",
+            description = "Lista de sugestões recuperada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = Page.class))
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @GetMapping
     public ResponseEntity<Page<SuggestionDTO>> list(
-        @Parameter(description = "Page number (0-based)", example = "0")
+        @Parameter(description = "Número da página (começa em 0)", example = "0")
         @RequestParam(defaultValue = "0") int page,
-        @Parameter(description = "Number of items per page", example = "10")
+        @Parameter(description = "Número de itens por página", example = "10")
         @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(svc.listAll(page, size));
     }
 
+    /**
+     * Atualiza uma sugestão existente.
+     *
+     * @param id ID da sugestão
+     * @param dto Novos dados da sugestão
+     * @return Sugestão atualizada
+     */
     @Operation(
-        summary = "Update suggestion",
-        description = "Updates an existing suggestion with new data"
+        summary = "Atualizar sugestão",
+        description = "Atualiza uma sugestão existente com novos dados"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully updated the suggestion",
+            description = "Sugestão atualizada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = SuggestionDTO.class))
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid input - The suggestion data is invalid"
+            description = "Entrada inválida - Os dados da sugestão estão inválidos"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Suggestion not found"
+            description = "Sugestão não encontrada"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @PutMapping("/{id}")
     public ResponseEntity<SuggestionDTO> update(
-        @Parameter(description = "ID of the suggestion to update", required = true)
+        @Parameter(description = "ID da sugestão para atualizar", required = true)
         @PathVariable Long id,
-        @Parameter(description = "Updated suggestion data", required = true)
+        @Parameter(description = "Novos dados da sugestão", required = true)
         @Validated(SuggestionDTO.Update.class) @RequestBody SuggestionDTO dto
     ) {
         return ResponseEntity.ok(svc.update(id, dto));
     }
 
+    /**
+     * Exclui uma sugestão do sistema.
+     *
+     * @param id ID da sugestão
+     */
     @Operation(
-        summary = "Delete suggestion",
-        description = "Deletes a suggestion from the system"
+        summary = "Excluir sugestão",
+        description = "Remove uma sugestão do sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "204",
-            description = "Successfully deleted the suggestion"
+            description = "Sugestão excluída com sucesso"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Suggestion not found"
+            description = "Sugestão não encontrada"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         ),
         @ApiResponse(
             responseCode = "403",
-            description = "Forbidden - User does not have required permissions"
+            description = "Proibido - Usuário não possui as permissões necessárias"
         )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-        @Parameter(description = "ID of the suggestion to delete", required = true)
+        @Parameter(description = "ID da sugestão para excluir", required = true)
         @PathVariable Long id
     ) {
         svc.delete(id);

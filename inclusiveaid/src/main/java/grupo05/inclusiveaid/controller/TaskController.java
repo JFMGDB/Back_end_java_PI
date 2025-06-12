@@ -17,162 +17,193 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controlador responsável por gerenciar as operações relacionadas às tarefas.
- * Fornece endpoints REST para criar, ler, atualizar e deletar tarefas.
+ * Controlador responsável pelo gerenciamento das tarefas no sistema AID.
+ * Fornece endpoints REST para criar, recuperar, atualizar e deletar tarefas.
  */
 @RestController
 @RequestMapping("/api/tarefas")
 @RequiredArgsConstructor
-@Tag(name = "Task Management", description = "APIs for managing tasks in the AID system")
+@Tag(name = "Gerenciamento de Tarefas", description = "APIs para gerenciamento de tarefas no sistema AID")
 @SecurityRequirement(name = "bearerAuth")
 public class TaskController {
     private final TaskService taskService;
 
+    /**
+     * Lista todas as tarefas do sistema de forma paginada.
+     *
+     * @param page Número da página
+     * @param size Quantidade de itens por página
+     * @return Página de tarefas
+     */
     @Operation(
-        summary = "Get all tasks",
-        description = "Retrieves a paginated list of all tasks in the system"
+        summary = "Listar todas as tarefas",
+        description = "Recupera uma lista paginada de todas as tarefas no sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved all tasks",
+            description = "Tarefas recuperadas com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = Page.class))
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         ),
         @ApiResponse(
             responseCode = "403",
-            description = "Forbidden - User does not have required permissions"
+            description = "Proibido - Usuário não possui as permissões necessárias"
         )
     })
     @GetMapping
     public ResponseEntity<Page<TaskDTO>> listAll(
-        @Parameter(description = "Page number (0-based)", example = "0")
+        @Parameter(description = "Número da página (começa em 0)", example = "0")
         @RequestParam(defaultValue = "0") int page,
-        @Parameter(description = "Page size", example = "10")
+        @Parameter(description = "Número de itens por página", example = "10")
         @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(taskService.listAll(page, size));
     }
 
+    /**
+     * Recupera uma tarefa específica pelo ID.
+     *
+     * @param id ID da tarefa
+     * @return ResponseEntity contendo a tarefa
+     */
     @Operation(
-        summary = "Get task by ID",
-        description = "Retrieves a specific task by its ID"
+        summary = "Obter tarefa por ID",
+        description = "Recupera uma tarefa específica pelo seu ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved the task",
+            description = "Tarefa recuperada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = TaskDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Task not found"
+            description = "Tarefa não encontrada"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @GetMapping("/{id}")
     public ResponseEntity<TaskDTO> getById(
-        @Parameter(description = "ID of the task to retrieve", required = true)
+        @Parameter(description = "ID da tarefa para recuperar", required = true)
         @PathVariable Long id
     ) {
         return ResponseEntity.ok(taskService.getById(id));
     }
 
+    /**
+     * Cria uma nova tarefa no sistema.
+     *
+     * @param taskDTO Dados da tarefa a ser criada
+     * @return ResponseEntity contendo a tarefa criada
+     */
     @Operation(
-        summary = "Create new task",
-        description = "Creates a new task in the system"
+        summary = "Criar nova tarefa",
+        description = "Cria uma nova tarefa no sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully created the task",
+            description = "Tarefa criada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = TaskDTO.class))
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid input - The task data is invalid"
+            description = "Entrada inválida - Os dados da tarefa estão inválidos"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @PostMapping
     public ResponseEntity<TaskDTO> create(
-        @Parameter(description = "Task data to create", required = true)
+        @Parameter(description = "Dados da tarefa para criar", required = true)
         @Valid @RequestBody TaskDTO taskDTO
     ) {
         return ResponseEntity.ok(taskService.create(taskDTO));
     }
 
+    /**
+     * Atualiza uma tarefa existente.
+     *
+     * @param id ID da tarefa
+     * @param taskDTO Novos dados da tarefa
+     * @return Tarefa atualizada
+     */
     @Operation(
-        summary = "Update task",
-        description = "Updates an existing task's information"
+        summary = "Atualizar tarefa",
+        description = "Atualiza as informações de uma tarefa existente"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully updated the task",
+            description = "Tarefa atualizada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = TaskDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Task not found"
+            description = "Tarefa não encontrada"
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid input - The task data is invalid"
+            description = "Entrada inválida - Os dados da tarefa estão inválidos"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @PutMapping("/{id}")
     public ResponseEntity<TaskDTO> update(
-        @Parameter(description = "ID of the task to update", required = true)
+        @Parameter(description = "ID da tarefa para atualizar", required = true)
         @PathVariable Long id,
-        @Parameter(description = "Updated task data", required = true)
+        @Parameter(description = "Novos dados da tarefa", required = true)
         @Valid @RequestBody TaskDTO taskDTO
     ) {
         return ResponseEntity.ok(taskService.update(id, taskDTO));
     }
 
+    /**
+     * Exclui uma tarefa do sistema.
+     *
+     * @param id ID da tarefa
+     */
     @Operation(
-        summary = "Delete task",
-        description = "Deletes a task from the system"
+        summary = "Excluir tarefa",
+        description = "Remove uma tarefa do sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "204",
-            description = "Successfully deleted the task"
+            description = "Tarefa excluída com sucesso"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Task not found"
+            description = "Tarefa não encontrada"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         ),
         @ApiResponse(
             responseCode = "403",
-            description = "Forbidden - User does not have required permissions"
+            description = "Proibido - Usuário não possui as permissões necessárias"
         )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-        @Parameter(description = "ID of the task to delete", required = true)
+        @Parameter(description = "ID da tarefa para excluir", required = true)
         @PathVariable Long id
     ) {
         taskService.delete(id);

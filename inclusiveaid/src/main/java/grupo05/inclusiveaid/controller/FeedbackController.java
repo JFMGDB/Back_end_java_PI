@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/feedback")
 @RequiredArgsConstructor
-@Tag(name = "Feedback", description = "APIs for managing user feedback in the AID system")
+@Tag(name = "Feedback", description = "APIs para gerenciamento de feedback dos usuários no sistema AID")
 public class FeedbackController {
     private final FeedbackService svc;
 
@@ -47,23 +47,23 @@ public class FeedbackController {
      * @throws UnauthorizedException se o usuário não estiver autenticado
      */
     @Operation(
-        summary = "Create feedback",
-        description = "Creates a new feedback entry from a user about accessibility features"
+        summary = "Criar feedback",
+        description = "Cria um novo registro de feedback de um usuário sobre recursos de acessibilidade"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully created the feedback",
+            description = "Feedback criado com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = FeedbackDTO.class))
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid input - The feedback data is invalid"
+            description = "Entrada inválida - Os dados do feedback estão inválidos"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @PostMapping
@@ -86,23 +86,23 @@ public class FeedbackController {
      * @throws UnauthorizedException se o usuário não estiver autenticado
      */
     @Operation(
-        summary = "Get feedback by ID",
-        description = "Retrieves a specific feedback entry by its ID"
+        summary = "Obter feedback por ID",
+        description = "Recupera um registro de feedback específico pelo seu ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved the feedback",
+            description = "Feedback recuperado com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = FeedbackDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Feedback not found"
+            description = "Feedback não encontrado"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @GetMapping("/{id}")
@@ -125,19 +125,19 @@ public class FeedbackController {
      * @throws UnauthorizedException se o usuário não estiver autenticado
      */
     @Operation(
-        summary = "List all feedback",
-        description = "Retrieves a paginated list of all feedback entries in the system"
+        summary = "Listar todos os feedbacks",
+        description = "Recupera uma lista paginada de todos os registros de feedback no sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved the list of feedback",
+            description = "Lista de feedbacks recuperada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = Page.class))
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @GetMapping
@@ -163,25 +163,25 @@ public class FeedbackController {
      * @throws AccessDeniedException se o usuário não tiver permissão para excluir
      */
     @Operation(
-        summary = "Delete feedback",
-        description = "Deletes a feedback entry from the system"
+        summary = "Excluir feedback",
+        description = "Remove um registro de feedback do sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "204",
-            description = "Successfully deleted the feedback"
+            description = "Feedback excluído com sucesso"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Feedback not found"
+            description = "Feedback não encontrado"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         ),
         @ApiResponse(
             responseCode = "403",
-            description = "Forbidden - User does not have required permissions"
+            description = "Proibido - Usuário não possui as permissões necessárias"
         )
     })
     @DeleteMapping("/{id}")

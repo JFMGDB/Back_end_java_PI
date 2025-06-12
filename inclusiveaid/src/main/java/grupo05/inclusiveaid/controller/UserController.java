@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
-@Tag(name = "User Management", description = "APIs for managing users in the AID system")
+@Tag(name = "Gerenciamento de Usuários", description = "APIs para gerenciamento de usuários no sistema AID")
 @SecurityRequirement(name = "bearerAuth")
 public class UserController {
     private final UserService userService;
@@ -54,30 +54,30 @@ public class UserController {
      * @throws AccessDeniedException se o usuário não tiver permissão para listar usuários
      */
     @Operation(
-        summary = "Get all users",
-        description = "Retrieves a paginated list of all users in the system"
+        summary = "Obter todos os usuários",
+        description = "Recupera uma lista paginada de todos os usuários no sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved all users",
+            description = "Usuários recuperados com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = Page.class))
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         ),
         @ApiResponse(
             responseCode = "403",
-            description = "Forbidden - User does not have required permissions"
+            description = "Proibido - Usuário não possui as permissões necessárias"
         )
     })
     @GetMapping
     public ResponseEntity<Page<UserDTO>> listAll(
-        @Parameter(description = "Page number (0-based)", example = "0")
+        @Parameter(description = "Número da página (começa em 0)", example = "0")
         @RequestParam(defaultValue = "0") int page,
-        @Parameter(description = "Page size", example = "10")
+        @Parameter(description = "Número de itens por página", example = "10")
         @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(userService.listAll(page, size));
@@ -95,28 +95,28 @@ public class UserController {
      * @throws UnauthorizedException se o usuário não estiver autenticado
      */
     @Operation(
-        summary = "Get user by ID",
-        description = "Retrieves a specific user by their ID"
+        summary = "Obter usuário por ID",
+        description = "Recupera um usuário específico pelo seu ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved the user",
+            description = "Usuário recuperado com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = UserDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "User not found"
+            description = "Usuário não encontrado"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getById(
-        @Parameter(description = "ID of the user to retrieve", required = true)
+        @Parameter(description = "ID do usuário para recuperar", required = true)
         @PathVariable Long id
     ) {
         return ResponseEntity.ok(userService.getById(id));
@@ -135,28 +135,28 @@ public class UserController {
      * @throws UnauthorizedException se o usuário não estiver autenticado
      */
     @Operation(
-        summary = "Create new user",
-        description = "Creates a new user in the system"
+        summary = "Criar novo usuário",
+        description = "Cria um novo usuário no sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully created the user",
+            description = "Usuário criado com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = UserDTO.class))
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid input - The user data is invalid"
+            description = "Entrada inválida - Os dados do usuário são inválidos"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @PostMapping
     public ResponseEntity<UserDTO> create(
-        @Parameter(description = "User data to create", required = true)
+        @Parameter(description = "Dados do usuário para criar", required = true)
         @Valid @RequestBody UserDTO userDTO
     ) {
         return ResponseEntity.ok(userService.create(userDTO));
@@ -176,34 +176,34 @@ public class UserController {
      * @throws UnauthorizedException se o usuário não estiver autenticado
      */
     @Operation(
-        summary = "Update user",
-        description = "Updates an existing user's information"
+        summary = "Atualizar usuário",
+        description = "Atualiza as informações de um usuário existente"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully updated the user",
+            description = "Usuário atualizado com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = UserDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "User not found"
+            description = "Usuário não encontrado"
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid input - The user data is invalid"
+            description = "Entrada inválida - Os dados do usuário são inválidos"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> update(
-        @Parameter(description = "ID of the user to update", required = true)
+        @Parameter(description = "ID do usuário para atualizar", required = true)
         @PathVariable Long id,
-        @Parameter(description = "Updated user data", required = true)
+        @Parameter(description = "Novos dados do usuário", required = true)
         @Valid @RequestBody UserDTO userDTO
     ) {
         return ResponseEntity.ok(userService.update(id, userDTO));
@@ -222,30 +222,30 @@ public class UserController {
      * @throws AccessDeniedException se o usuário não tiver permissão para excluir usuários
      */
     @Operation(
-        summary = "Delete user",
-        description = "Deletes a user from the system"
+        summary = "Excluir usuário",
+        description = "Remove um usuário do sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "204",
-            description = "Successfully deleted the user"
+            description = "Usuário excluído com sucesso"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "User not found"
+            description = "Usuário não encontrado"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         ),
         @ApiResponse(
             responseCode = "403",
-            description = "Forbidden - User does not have required permissions"
+            description = "Proibido - Usuário não possui as permissões necessárias"
         )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-        @Parameter(description = "ID of the user to delete", required = true)
+        @Parameter(description = "ID do usuário para excluir", required = true)
         @PathVariable Long id
     ) {
         userService.delete(id);

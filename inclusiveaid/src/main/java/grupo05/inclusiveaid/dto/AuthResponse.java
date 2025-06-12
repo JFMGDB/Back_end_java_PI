@@ -8,5 +8,8 @@ import lombok.Data;
  */
 @Data @AllArgsConstructor
 public class AuthResponse {
-  private String token;
+    /**
+     * Token JWT de autenticação.
+     */
+    private String token;
 }

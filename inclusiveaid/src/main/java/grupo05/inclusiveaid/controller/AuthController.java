@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-@Tag(name = "Authentication", description = "APIs for user authentication and registration")
+@Tag(name = "Autenticação", description = "APIs para autenticação e registro de usuários")
 public class AuthController {
     private final AuthService authService;
 
@@ -48,23 +48,23 @@ public class AuthController {
      * @throws ValidationException se o formato da requisição for inválido
      */
     @Operation(
-        summary = "Authenticate user",
-        description = "Authenticates a user and returns a JWT token for subsequent requests"
+        summary = "Autenticar usuário",
+        description = "Autentica um usuário e retorna um token JWT para requisições subsequentes"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully authenticated",
+            description = "Autenticação realizada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AuthResponse.class))
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Invalid credentials"
+            description = "Credenciais inválidas"
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid request format"
+            description = "Formato da requisição inválido"
         )
     })
     @PostMapping("/login")

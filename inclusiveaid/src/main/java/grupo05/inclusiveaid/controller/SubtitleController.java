@@ -16,157 +16,188 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller for managing accessibility subtitles in the AID system.
- * Provides endpoints for creating, retrieving, listing, and deleting subtitles for hearing-impaired users.
+ * Controlador responsável pelo gerenciamento de legendas de acessibilidade no sistema AID.
+ * Fornece endpoints para criar, recuperar, listar, atualizar e excluir legendas para usuários com deficiência auditiva.
  */
 @RestController
 @RequestMapping("/api/subtitles")
 @RequiredArgsConstructor
-@Tag(name = "Subtitle", description = "APIs for managing accessibility subtitles in the AID system")
+@Tag(name = "Legenda", description = "APIs para gerenciamento de legendas de acessibilidade no sistema AID")
 public class SubtitleController {
     private final SubtitleService svc;
 
+    /**
+     * Cria uma nova legenda de acessibilidade.
+     *
+     * @param dto Dados da legenda a ser criada
+     * @return ResponseEntity contendo a legenda criada
+     */
     @Operation(
-        summary = "Create subtitle",
-        description = "Creates a new subtitle record for accessibility purposes"
+        summary = "Criar legenda",
+        description = "Cria um novo registro de legenda para acessibilidade"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully created the subtitle",
+            description = "Legenda criada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = SubtitleDTO.class))
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid input - The subtitle data is invalid"
+            description = "Entrada inválida - Os dados da legenda estão inválidos"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @PostMapping
     public ResponseEntity<SubtitleDTO> create(
-        @Parameter(description = "Subtitle data to create", required = true)
+        @Parameter(description = "Dados da legenda para criar", required = true)
         @Validated(SubtitleDTO.Create.class) @RequestBody SubtitleDTO dto
     ) {
         return ResponseEntity.ok(svc.create(dto));
     }
 
+    /**
+     * Recupera uma legenda específica pelo ID.
+     *
+     * @param id ID da legenda
+     * @return ResponseEntity contendo a legenda
+     */
     @Operation(
-        summary = "Get subtitle by ID",
-        description = "Retrieves a specific subtitle by its ID"
+        summary = "Obter legenda por ID",
+        description = "Recupera uma legenda específica pelo seu ID"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved the subtitle",
+            description = "Legenda recuperada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = SubtitleDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Subtitle not found"
+            description = "Legenda não encontrada"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @GetMapping("/{id}")
     public ResponseEntity<SubtitleDTO> get(
-        @Parameter(description = "ID of the subtitle to retrieve", required = true)
+        @Parameter(description = "ID da legenda para recuperar", required = true)
         @PathVariable Long id
     ) {
         return ResponseEntity.ok(svc.getById(id));
     }
 
+    /**
+     * Lista todas as legendas do sistema de forma paginada.
+     *
+     * @param page Número da página
+     * @param size Quantidade de itens por página
+     * @return Página de legendas
+     */
     @Operation(
-        summary = "List all subtitles",
-        description = "Retrieves a paginated list of all subtitles in the system"
+        summary = "Listar todas as legendas",
+        description = "Recupera uma lista paginada de todas as legendas no sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved the list of subtitles",
+            description = "Lista de legendas recuperada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = Page.class))
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @GetMapping
     public ResponseEntity<Page<SubtitleDTO>> list(
-        @Parameter(description = "Page number (0-based)", example = "0")
+        @Parameter(description = "Número da página (começa em 0)", example = "0")
         @RequestParam(defaultValue = "0") int page,
-        @Parameter(description = "Number of items per page", example = "10")
+        @Parameter(description = "Número de itens por página", example = "10")
         @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(svc.listAll(page, size));
     }
 
+    /**
+     * Atualiza uma legenda existente.
+     *
+     * @param id ID da legenda
+     * @param dto Novos dados da legenda
+     * @return Legenda atualizada
+     */
     @Operation(
-        summary = "Update subtitle",
-        description = "Updates an existing subtitle with new text"
+        summary = "Atualizar legenda",
+        description = "Atualiza uma legenda existente com novo texto"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully updated the subtitle",
+            description = "Legenda atualizada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = SubtitleDTO.class))
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid input - The subtitle data is invalid"
+            description = "Entrada inválida - Os dados da legenda estão inválidos"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Subtitle not found"
+            description = "Legenda não encontrada"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @PutMapping("/{id}")
     public ResponseEntity<SubtitleDTO> update(
-        @Parameter(description = "ID of the subtitle to update", required = true)
+        @Parameter(description = "ID da legenda para atualizar", required = true)
         @PathVariable Long id,
-        @Parameter(description = "Updated subtitle data", required = true)
+        @Parameter(description = "Novos dados da legenda", required = true)
         @Validated(SubtitleDTO.Update.class) @RequestBody SubtitleDTO dto
     ) {
         return ResponseEntity.ok(svc.update(id, dto));
     }
 
+    /**
+     * Exclui uma legenda do sistema.
+     *
+     * @param id ID da legenda
+     */
     @Operation(
-        summary = "Delete subtitle",
-        description = "Deletes a subtitle from the system"
+        summary = "Excluir legenda",
+        description = "Remove uma legenda do sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "204",
-            description = "Successfully deleted the subtitle"
+            description = "Legenda excluída com sucesso"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "Subtitle not found"
+            description = "Legenda não encontrada"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         ),
         @ApiResponse(
             responseCode = "403",
-            description = "Forbidden - User does not have required permissions"
+            description = "Proibido - Usuário não possui as permissões necessárias"
         )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-        @Parameter(description = "ID of the subtitle to delete", required = true)
+        @Parameter(description = "ID da legenda para excluir", required = true)
         @PathVariable Long id
     ) {
         svc.delete(id);

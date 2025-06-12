@@ -44,7 +44,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/ai-agents")
 @RequiredArgsConstructor
-@Tag(name = "AI Agent", description = "APIs for managing AI agents and their interactions in the AID system")
+@Tag(name = "Agente de IA", description = "APIs para gerenciamento de agentes de IA e suas interações no sistema AID")
 public class AIAgentController {
 
     private final AIAgentService aiAgentService;
@@ -61,23 +61,23 @@ public class AIAgentController {
      * @throws UnauthorizedException se o usuário não estiver autenticado
      */
     @Operation(
-        summary = "Create a new AI agent",
-        description = "Creates a new AI agent with specified configuration and capabilities"
+        summary = "Criar um novo agente de IA",
+        description = "Cria um novo agente de IA com configuração e capacidades específicas"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully created the AI agent",
+            description = "Agente de IA criado com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AIAgentDTO.class))
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid input - The agent data is invalid"
+            description = "Entrada inválida - Os dados do agente são inválidos"
         ),
         @ApiResponse(
             responseCode = "401",
-            description = "Unauthorized - User is not authenticated"
+            description = "Não autorizado - Usuário não está autenticado"
         )
     })
     @PostMapping
@@ -101,23 +101,23 @@ public class AIAgentController {
      * @throws ValidationException se os dados de atualização forem inválidos
      */
     @Operation(
-        summary = "Update an existing AI agent",
-        description = "Updates the configuration and capabilities of an existing AI agent"
+        summary = "Atualizar um agente de IA existente",
+        description = "Atualiza a configuração e capacidades de um agente de IA existente"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully updated the AI agent",
+            description = "Agente de IA atualizado com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AIAgentDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "AI agent not found"
+            description = "Agente de IA não encontrado"
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid input - The agent data is invalid"
+            description = "Entrada inválida - Os dados do agente são inválidos"
         )
     })
     @PutMapping("/{id}")
@@ -141,17 +141,17 @@ public class AIAgentController {
      * @throws ResourceNotFoundException se o agente não for encontrado
      */
     @Operation(
-        summary = "Delete an AI agent",
-        description = "Removes an AI agent from the system"
+        summary = "Excluir um agente de IA",
+        description = "Remove um agente de IA do sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "204",
-            description = "Successfully deleted the AI agent"
+            description = "Agente de IA excluído com sucesso"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "AI agent not found"
+            description = "Agente de IA não encontrado"
         )
     })
     @DeleteMapping("/{id}")
@@ -173,19 +173,19 @@ public class AIAgentController {
      * @throws ResourceNotFoundException se o agente não for encontrado
      */
     @Operation(
-        summary = "Get an AI agent by ID",
-        description = "Retrieves detailed information about a specific AI agent"
+        summary = "Obter um agente de IA por ID",
+        description = "Recupera informações detalhadas sobre um agente de IA específico"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved the AI agent",
+            description = "Agente de IA recuperado com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AIAgentDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "AI agent not found"
+            description = "Agente de IA não encontrado"
         )
     })
     @GetMapping("/{id}")
@@ -205,13 +205,13 @@ public class AIAgentController {
      * @return ResponseEntity contendo a lista de agentes
      */
     @Operation(
-        summary = "Get all AI agents",
-        description = "Retrieves a list of all AI agents in the system"
+        summary = "Obter todos os agentes de IA",
+        description = "Recupera uma lista de todos os agentes de IA no sistema"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved all AI agents",
+            description = "Agentes de IA recuperados com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AIAgentDTO.class))
         )
@@ -230,13 +230,13 @@ public class AIAgentController {
      * @return ResponseEntity contendo a lista de agentes ativos
      */
     @Operation(
-        summary = "Get all active AI agents",
-        description = "Retrieves a list of all currently active AI agents"
+        summary = "Obter todos os agentes de IA ativos",
+        description = "Recupera uma lista de todos os agentes de IA atualmente ativos"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved active AI agents",
+            description = "Agentes de IA ativos recuperados com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AIAgentDTO.class))
         )
@@ -259,19 +259,19 @@ public class AIAgentController {
      * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
      */
     @Operation(
-        summary = "Process a voice command",
-        description = "Processes a voice command for a specific user using the specified AI agent"
+        summary = "Processar um comando de voz",
+        description = "Processa um comando de voz para um usuário específico usando o agente de IA especificado"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully processed the voice command",
+            description = "Comando de voz processado com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AgentInteractionDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "AI agent or user not found"
+            description = "Agente de IA ou usuário não encontrado"
         )
     })
     @PostMapping("/{agentId}/users/{userId}/voice-command")
@@ -299,19 +299,19 @@ public class AIAgentController {
      * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
      */
     @Operation(
-        summary = "Analyze a layout",
-        description = "Analyzes a UI layout for accessibility improvements"
+        summary = "Analisar um layout",
+        description = "Analisa um layout de interface para melhorias de acessibilidade"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully analyzed the layout",
+            description = "Layout analisado com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AgentInteractionDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "AI agent or user not found"
+            description = "Agente de IA ou usuário não encontrado"
         )
     })
     @PostMapping("/{agentId}/users/{userId}/analyze-layout")
@@ -340,19 +340,19 @@ public class AIAgentController {
      * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
      */
     @Operation(
-        summary = "Generate subtitles",
-        description = "Generates subtitles for audio content"
+        summary = "Gerar legendas",
+        description = "Gera legendas para conteúdo de áudio"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully generated subtitles",
+            description = "Legendas geradas com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AgentInteractionDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "AI agent or user not found"
+            description = "Agente de IA ou usuário não encontrado"
         )
     })
     @PostMapping("/{agentId}/users/{userId}/generate-subtitle")
@@ -380,19 +380,19 @@ public class AIAgentController {
      * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
      */
     @Operation(
-        summary = "Describe an image",
-        description = "Generates a description of an image for visually impaired users"
+        summary = "Descrever uma imagem",
+        description = "Gera uma descrição de uma imagem para usuários com deficiência visual"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully described the image",
+            description = "Imagem descrita com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AgentInteractionDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "AI agent or user not found"
+            description = "Agente de IA ou usuário não encontrado"
         )
     })
     @PostMapping("/{agentId}/users/{userId}/describe-image")
@@ -420,19 +420,19 @@ public class AIAgentController {
      * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
      */
     @Operation(
-        summary = "Adapt a layout for accessibility",
-        description = "Modifies a UI layout to improve accessibility for users with disabilities"
+        summary = "Adaptar um layout para acessibilidade",
+        description = "Modifica um layout de interface para melhorar a acessibilidade para usuários com deficiência"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully adapted the layout",
+            description = "Layout adaptado com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AgentInteractionDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "AI agent or user not found"
+            description = "Agente de IA ou usuário não encontrado"
         )
     })
     @PostMapping("/{agentId}/users/{userId}/adapt-layout")
@@ -460,19 +460,19 @@ public class AIAgentController {
      * @throws ResourceNotFoundException se o agente ou usuário não for encontrado
      */
     @Operation(
-        summary = "Automate a task",
-        description = "Automates a task using AI capabilities"
+        summary = "Automatizar uma tarefa",
+        description = "Automatiza uma tarefa usando capacidades de IA"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully automated the task",
+            description = "Tarefa automatizada com sucesso",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AgentInteractionDTO.class))
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "AI agent or user not found"
+            description = "Agente de IA ou usuário não encontrado"
         )
     })
     @PostMapping("/{agentId}/users/{userId}/automate-task")
@@ -500,17 +500,17 @@ public class AIAgentController {
      * @throws ResourceNotFoundException se o agente não for encontrado
      */
     @Operation(
-        summary = "Update AI model",
-        description = "Updates the AI model configuration for an agent"
+        summary = "Atualizar modelo de IA",
+        description = "Atualiza a configuração do modelo de IA para um agente"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully updated the AI model"
+            description = "Modelo de IA atualizado com sucesso"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "AI agent not found"
+            description = "Agente de IA não encontrado"
         )
     })
     @PutMapping("/{agentId}/model")
@@ -538,17 +538,17 @@ public class AIAgentController {
      * @throws ResourceNotFoundException se o agente não for encontrado
      */
     @Operation(
-        summary = "Train AI model",
-        description = "Initiates training of the AI model with provided data"
+        summary = "Treinar modelo de IA",
+        description = "Inicia o treinamento do modelo de IA com os dados fornecidos"
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully initiated model training"
+            description = "Treinamento do modelo iniciado com sucesso"
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "AI agent not found"
+            description = "Agente de IA não encontrado"
         )
     })
     @PostMapping("/{agentId}/train")

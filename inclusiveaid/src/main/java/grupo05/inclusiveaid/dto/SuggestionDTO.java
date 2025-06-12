@@ -4,18 +4,41 @@ import lombok.*;
 import jakarta.validation.constraints.*;
 
 /**
- * DTO para Suggestion.
+ * DTO (Data Transfer Object) para sugestões de acessibilidade.
+ * Utilizado para transferir dados relacionados às sugestões geradas pelo sistema
+ * para melhorar a acessibilidade da interface.
+ * 
+ * @author Grupo 05
+ * @version 1.0
  */
 @Data @Builder
 public class SuggestionDTO {
-  public interface Create {}
-  public interface Update {}
-  
-  private Long id;
+    /**
+     * Interface para validação na criação de uma nova sugestão.
+     */
+    public interface Create {}
+    
+    /**
+     * Interface para validação na atualização de uma sugestão existente.
+     */
+    public interface Update {}
+    
+    /**
+     * Identificador único da sugestão.
+     */
+    private Long id;
 
-  @NotNull(groups = Create.class)
-  private Long layoutAnalysisId;
+    /**
+     * Identificador da análise de layout associada à sugestão.
+     * Não pode ser nulo na criação.
+     */
+    @NotNull(groups = Create.class)
+    private Long layoutAnalysisId;
 
-  @NotBlank(groups = {Create.class, Update.class})
-  private String message;
+    /**
+     * Mensagem contendo a sugestão de melhoria.
+     * Não pode estar em branco.
+     */
+    @NotBlank(groups = {Create.class, Update.class})
+    private String message;
 }

@@ -8,15 +8,33 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO (Data Transfer Object) para responsáveis.
+ * Utilizado para transferir dados relacionados aos responsáveis por usuários ou tarefas no sistema.
+ *
+ * @author Grupo 05
+ * @version 1.0
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponsibleDTO {
+    /**
+     * Identificador único do responsável.
+     */
     private Long id;
 
+    /**
+     * Nome do responsável.
+     * Não pode estar em branco.
+     */
     @NotBlank(groups = {Create.class, Update.class})
     private String name;
 
+    /**
+     * Email do responsável.
+     * Não pode estar em branco.
+     */
     @NotBlank(groups = {Create.class, Update.class})
     @Email(groups = {Create.class, Update.class})
     private String email;
@@ -25,6 +43,9 @@ public class ResponsibleDTO {
     @NotBlank(groups = {Create.class})
     private String password;
 
+    /**
+     * Telefone de contato do responsável.
+     */
     @NotBlank(groups = {Create.class, Update.class})
     private String phone;
 
