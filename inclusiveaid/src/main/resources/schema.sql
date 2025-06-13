@@ -1,113 +1,67 @@
-DROP TABLE IF EXISTS agent_active_users CASCADE;
-DROP TABLE IF EXISTS agent_interactions CASCADE;
-DROP TABLE IF EXISTS disability_specific_configs CASCADE;
-DROP TABLE IF EXISTS user_disability_types CASCADE;
-DROP TABLE IF EXISTS user_adaptation_settings CASCADE;
-DROP TABLE IF EXISTS ai_agents CASCADE;
-DROP TABLE IF EXISTS usuarios CASCADE;
-DROP TABLE IF EXISTS roles CASCADE;
-DROP TABLE IF EXISTS disability_types CASCADE;
-DROP TABLE IF EXISTS tags CASCADE;
+-- data.sql COMPLETO E CORRIGIDO
 
-CREATE TABLE roles (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(50) NOT NULL UNIQUE
-);
+-- Insere papéis padrão (roles)
+INSERT INTO roles (name) VALUES ('ROLE_USER'), ('ROLE_ADMIN') ON CONFLICT(name) DO NOTHING;
 
-CREATE TABLE usuarios (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  role_id BIGINT NOT NULL,
-  FOREIGN KEY (role_id) REFERENCES roles(id)
-);
+-- Insere usuário administrador com senha 'admin123'
+INSERT INTO usuarios (name, email, password, role_id, active)
+VALUES ('Admin', 'admin@inclusiveaid.com', '$2a$10$bO.g8.eJpLYL4n/j4L8x.OKP3sV1qmxzC335Gf8r3gJzD5m6jZgIe', (SELECT id FROM roles WHERE name = 'ROLE_ADMIN'), true)
+ON CONFLICT (email) DO NOTHING;
 
-CREATE TABLE disability_types (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(50) NOT NULL UNIQUE,
-  description TEXT
-);
+-- Insere usuário de exemplo 'Maria' com senha 'senha123'
+INSERT INTO usuarios (name, email, password, role_id, active)
+VALUES ('Maria', 'maria@ex.com', '$2a$10$bO.g8.eJpLYL4n/j4L8x.OKP3sV1qmxzC335Gf8r3gJzD5m6jZgIe', (SELECT id FROM roles WHERE name = 'ROLE_USER'), true)
+ON CONFLICT (email) DO NOTHING;
 
-CREATE TABLE ai_agents (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  version VARCHAR(20) NOT NULL,
-  is_active BOOLEAN NOT NULL DEFAULT true,
-  last_update TIMESTAMP NOT NULL,
-  nlp_config_language_model VARCHAR(100),
-  nlp_config_confidence_threshold DOUBLE,
-  nlp_config_enable_context_awareness BOOLEAN,
-  image_config_object_detection_model VARCHAR(100),
-  image_config_detection_threshold DOUBLE,
-  image_config_enable_ocr BOOLEAN,
-  voice_config_speech_recognition_model VARCHAR(100),
-  voice_config_recognition_threshold DOUBLE,
-  voice_config_enable_noise_reduction BOOLEAN
-);
+-- Insere tipos de deficiência padrão
+INSERT INTO disability_types (name, description) VALUES 
+('Visual', 'Deficiências visuais, incluindo cegueira e baixa visão'),
+('Auditiva', 'Deficiências auditivas, incluindo surdez e baixa audição'),
+('Motora', 'Deficiências motoras que afetam movimento e coordenação'),
+('Cognitiva', 'Deficiências cognitivas que afetam aprendizado e compreensão'),
+('TEA', 'Transtorno do Espectro Autista')
+ON CONFLICT(name) DO NOTHING;
 
-CREATE TABLE agent_active_users (
-  agent_id BIGINT NOT NULL,
-  user_id BIGINT NOT NULL,
-  PRIMARY KEY (agent_id, user_id),
-  FOREIGN KEY (agent_id) REFERENCES ai_agents(id),
-  FOREIGN KEY (user_id) REFERENCES usuarios(id)
-);
+-- Associa tipos de deficiência ao usuário 'Maria'
+-- (Assumindo que o ID de Maria será 2 após o admin)
+INSERT INTO user_disability_types (user_id, disability_type_id) VALUES
+  ((SELECT id FROM usuarios WHERE email = 'maria@ex.com'), (SELECT id FROM disability_types WHERE name = 'Visual')),
+  ((SELECT id FROM usuarios WHERE email = 'maria@ex.com'), (SELECT id FROM disability_types WHERE name = 'Motora')),
+  ((SELECT id FROM usuarios WHERE email = 'maria@ex.com'), (SELECT id FROM disability_types WHERE name = 'TEA'))
+ON CONFLICT DO NOTHING;
 
-CREATE TABLE agent_interactions (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  agent_id BIGINT NOT NULL,
-  user_id BIGINT NOT NULL,
-  type VARCHAR(50) NOT NULL,
-  action TEXT NOT NULL,
-  response TEXT,
-  timestamp TIMESTAMP NOT NULL,
-  successful BOOLEAN NOT NULL DEFAULT true,
-  FOREIGN KEY (agent_id) REFERENCES ai_agents(id),
-  FOREIGN KEY (user_id) REFERENCES usuarios(id)
-);
+-- Insere adaptações
+INSERT INTO adaptations (name, description, disability_type_id) VALUES
+  ('Leitura de Tela', 'Usa IA para descrever elementos da interface.', (SELECT id FROM disability_types WHERE name = 'Visual'))
+ON CONFLICT(name) DO NOTHING;
 
-CREATE TABLE disability_specific_configs (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  agent_id BIGINT NOT NULL,
-  disability_type_id BIGINT NOT NULL,
-  enable_screen_reader BOOLEAN DEFAULT false,
-  enable_high_contrast BOOLEAN DEFAULT false,
-  enable_image_description BOOLEAN DEFAULT false,
-  enable_subtitles BOOLEAN DEFAULT false,
-  enable_visual_alerts BOOLEAN DEFAULT false,
-  enable_sign_language BOOLEAN DEFAULT false,
-  enable_voice_commands BOOLEAN DEFAULT false,
-  enable_gesture_recognition BOOLEAN DEFAULT false,
-  enable_task_automation BOOLEAN DEFAULT false,
-  enable_simplified_mode BOOLEAN DEFAULT false,
-  enable_consistent_feedback BOOLEAN DEFAULT false,
-  enable_reduced_stimuli BOOLEAN DEFAULT false,
-  enable_step_by_step_guide BOOLEAN DEFAULT false,
-  enable_content_summarization BOOLEAN DEFAULT false,
-  enable_visual_guidance BOOLEAN DEFAULT false,
-  custom_settings TEXT,
-  FOREIGN KEY (agent_id) REFERENCES ai_agents(id),
-  FOREIGN KEY (disability_type_id) REFERENCES disability_types(id)
-);
+-- Define uma configuração de adaptação para 'Maria'
+INSERT INTO user_adaptation_settings (user_id, adaptation_id, enabled) VALUES
+  ((SELECT id FROM usuarios WHERE email = 'maria@ex.com'), (SELECT id FROM adaptations WHERE name = 'Leitura de Tela'), true)
+ON CONFLICT DO NOTHING;
 
-CREATE TABLE user_disability_types (
-  user_id BIGINT NOT NULL,
-  disability_type_id BIGINT NOT NULL,
-  PRIMARY KEY (user_id, disability_type_id),
-  FOREIGN KEY (user_id) REFERENCES usuarios(id),
-  FOREIGN KEY (disability_type_id) REFERENCES disability_types(id)
-);
+-- Insere dados de exemplo para uma sessão
+INSERT INTO sessions (user_id, started_at, ended_at) VALUES
+  ((SELECT id FROM usuarios WHERE email = 'maria@ex.com'), NOW(), NULL);
 
-CREATE TABLE user_adaptation_settings (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  user_id BIGINT NOT NULL,
-  setting_key VARCHAR(100) NOT NULL,
-  setting_value TEXT,
-  FOREIGN KEY (user_id) REFERENCES usuarios(id)
-);
+-- Insere outros dados de exemplo, assumindo que a sessão criada acima terá ID 1
+INSERT INTO layout_elements (element_type, description, xpath) VALUES
+  ('Button', 'Confirmar', '//*[@id=\"confirm\"]');
 
-CREATE TABLE tags (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(50) NOT NULL UNIQUE
-);
+INSERT INTO feedbacks (user_id, message, timestamp) VALUES
+  ((SELECT id FROM usuarios WHERE email = 'maria@ex.com'), 'Ótimo sistema', NOW());
+
+INSERT INTO layout_analyses (session_id, details, timestamp) VALUES
+  (1, '{\"elements\":[{\"type\":\"button\",\"text\":\"Enviar\"}]}', NOW());
+
+INSERT INTO suggestions (layout_analysis_id, message) VALUES
+  (1, 'Aumentar contraste');
+
+INSERT INTO subtitles (session_id, text, timestamp) VALUES
+  (1, 'Bem-vindo ao sistema', NOW());
+
+INSERT INTO voice_commands (session_id, command, result, timestamp) VALUES
+  (1, 'abrir menu', 'menu aberto', NOW());
+
+-- Insere tags padrão
+INSERT INTO tags (name) VALUES ('Accessibility'), ('UI') ON CONFLICT(name) DO NOTHING;
