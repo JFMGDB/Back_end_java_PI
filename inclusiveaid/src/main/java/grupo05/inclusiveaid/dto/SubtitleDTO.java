@@ -13,6 +13,7 @@ import java.time.Instant;
  * @version 1.0
  */
 @Data @Builder
+@NoArgsConstructor @AllArgsConstructor
 public class SubtitleDTO {
     /**
      * Interface para validação na criação de uma nova legenda.

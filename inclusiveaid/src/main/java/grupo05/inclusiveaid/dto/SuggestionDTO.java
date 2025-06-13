@@ -12,6 +12,7 @@ import jakarta.validation.constraints.*;
  * @version 1.0
  */
 @Data @Builder
+@NoArgsConstructor @AllArgsConstructor
 public class SuggestionDTO {
     /**
      * Interface para validação na criação de uma nova sugestão.

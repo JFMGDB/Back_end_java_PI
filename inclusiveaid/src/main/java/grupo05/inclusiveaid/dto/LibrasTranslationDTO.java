@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
  * @version 1.0
  */
 @Data @Builder
+@NoArgsConstructor @AllArgsConstructor
 @Schema(description = "Objeto de Transferência de Dados para operações de Tradução em Libras")
 public class LibrasTranslationDTO {
     /**

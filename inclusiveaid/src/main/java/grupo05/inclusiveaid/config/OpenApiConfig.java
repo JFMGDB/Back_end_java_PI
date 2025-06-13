@@ -6,7 +6,6 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,9 +18,9 @@ import java.util.List;
  * - Detalhes de contato
  * - Licença
  * - Servidores disponíveis
- * - Configuração de segurança com JWT
+ * - Configuração de segurança opcional com JWT
  * 
- * A documentação é acessível através do Swagger UI em /swagger-ui.html
+ * A documentação é acessível através do Swagger UI em /swagger-ui/index.html
  */
 @Configuration
 public class OpenApiConfig {
@@ -29,7 +28,7 @@ public class OpenApiConfig {
     /**
      * Cria a configuração personalizada do OpenAPI.
      * Define todas as informações necessárias para a documentação da API,
-     * incluindo metadados, servidores e esquema de segurança.
+     * incluindo metadados, servidores e esquema de segurança opcional.
      * 
      * Configurações implementadas:
      * - Título e descrição da API
@@ -37,7 +36,7 @@ public class OpenApiConfig {
      * - Informações de contato
      * - Licença MIT
      * - Servidor de desenvolvimento local
-     * - Esquema de segurança JWT Bearer
+     * - Esquema de segurança JWT Bearer (opcional)
      * 
      * @return Configuração completa do OpenAPI
      */
@@ -56,6 +55,8 @@ public class OpenApiConfig {
                     O AID analisa o layout e as ações do usuário, fornece feedback adequado e 
                     personaliza a experiência com base no tipo de deficiência (visual, auditiva, 
                     motora, cognitiva ou sensorial).
+                    
+                    Nota: Para desenvolvimento, alguns endpoints podem não exigir autenticação.
                     """)
                 .version("1.0.0")
                 .contact(new Contact()
@@ -69,7 +70,7 @@ public class OpenApiConfig {
                     .url("http://localhost:8080")
                     .description("Local Development Server")
             ))
-            .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+            // Segurança JWT opcional - não obrigatória para todos os endpoints
             .components(new io.swagger.v3.oas.models.Components()
                 .addSecuritySchemes(securitySchemeName,
                     new SecurityScheme()
@@ -77,6 +78,6 @@ public class OpenApiConfig {
                         .type(SecurityScheme.Type.HTTP)
                         .scheme("bearer")
                         .bearerFormat("JWT")
-                        .description("JWT token de autenticação")));
+                        .description("JWT token de autenticação (opcional para alguns endpoints)")));
     }
 }

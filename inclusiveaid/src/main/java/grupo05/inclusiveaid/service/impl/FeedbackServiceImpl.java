@@ -33,7 +33,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     // garante que usuário existe
     userRepo.findById(dto.getUserId())
       .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
-    dto.setTimestamp(Instant.now());
+    dto.setTimestamp(Instant.now().toString());
     return mapper.toDto(repo.save(mapper.toEntity(dto)));
   }
 

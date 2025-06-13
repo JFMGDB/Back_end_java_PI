@@ -20,6 +20,8 @@ import java.util.*;
  * @version 1.0
  */
 @Data @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Objeto de Transferência de Dados para operações de Usuário")
 public class UserDTO {
     /**

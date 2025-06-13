@@ -2,7 +2,6 @@ package grupo05.inclusiveaid.dto;
 
 import lombok.*;
 import jakarta.validation.constraints.*;
-import java.time.Instant;
 
 /**
  * DTO (Data Transfer Object) para adaptações de acessibilidade.
@@ -11,7 +10,10 @@ import java.time.Instant;
  * @author Grupo 05
  * @version 1.0
  */
-@Data @Builder
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AdaptationDTO {
   public interface Create {}
   public interface Update {}
@@ -36,5 +38,5 @@ public class AdaptationDTO {
   /**
    * Data e hora em que a adaptação foi realizada.
    */
-  private Instant timestamp;
+  private String timestamp;
 }

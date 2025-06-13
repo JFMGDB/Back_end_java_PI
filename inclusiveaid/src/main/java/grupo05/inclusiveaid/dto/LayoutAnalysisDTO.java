@@ -2,13 +2,11 @@ package grupo05.inclusiveaid.dto;
 
 import lombok.*;
 import jakarta.validation.constraints.*;
-import java.time.Instant;
 
 /**
  * DTO (Data Transfer Object) para análise de layout.
- * Utilizado para transferir dados relacionados à análise de layout de interfaces
- * para melhorar a acessibilidade do sistema.
- * 
+ * Utilizado para transferir dados sobre análises de layout realizadas pelo sistema.
+ *
  * @author Grupo 05
  * @version 1.0
  */
@@ -25,26 +23,24 @@ public class LayoutAnalysisDTO {
     public interface Update {}
     
     /**
-     * Identificador único da análise de layout.
+     * Identificador único da análise.
      */
     private Long id;
 
     /**
-     * Identificador do usuário que realizou a análise.
-     * Não pode ser nulo.
+     * Dados da análise em formato JSON.
+     */
+    @NotBlank(groups = {Create.class, Update.class})
+    private String analysisData;
+
+    /**
+     * Data e hora da análise.
+     */
+    private String timestamp;
+
+    /**
+     * Identificador do usuário que solicitou a análise.
      */
     @NotNull(groups = {Create.class, Update.class})
     private Long userId;
-
-    /**
-     * Resultado da análise de layout.
-     * Não pode estar em branco.
-     */
-    @NotBlank(groups = {Create.class, Update.class})
-    private String analysis;
-
-    /**
-     * Data e hora em que a análise foi realizada.
-     */
-    private Instant timestamp;
 }

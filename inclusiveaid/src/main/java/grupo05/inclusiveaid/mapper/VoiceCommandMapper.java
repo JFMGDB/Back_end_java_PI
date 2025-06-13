@@ -9,15 +9,19 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel="spring")
 public interface VoiceCommandMapper {
-  @Mapping(source="session.id",target="sessionId")
+  @Mapping(target = "userId", ignore = true)
+  @Mapping(target = "confidence", ignore = true)
+  @Mapping(target = "status", ignore = true)
   VoiceCommandDTO toDto(VoiceCommand e);
 
   @Mapping(target="id",ignore=true)
-  @Mapping(source="sessionId",target="session.id")
+  @Mapping(target="session",ignore=true)
+  @Mapping(target="result",ignore=true)
   VoiceCommand toEntity(VoiceCommandDTO dto);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "timestamp", ignore = true)
   @Mapping(target = "session", ignore = true)
+  @Mapping(target = "result", ignore = true)
   void updateEntity(VoiceCommandDTO dto, @MappingTarget VoiceCommand entity);
 }

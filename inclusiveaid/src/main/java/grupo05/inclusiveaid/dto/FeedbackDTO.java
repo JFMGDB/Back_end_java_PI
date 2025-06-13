@@ -2,7 +2,6 @@ package grupo05.inclusiveaid.dto;
 
 import lombok.*;
 import jakarta.validation.constraints.*;
-import java.time.Instant;
 
 /**
  * DTO (Data Transfer Object) para feedback dos usuários.
@@ -35,5 +34,5 @@ public class FeedbackDTO {
   @NotBlank(groups = {Create.class, Update.class})
   private String message;
 
-  private Instant timestamp;
+  private String timestamp;
 }

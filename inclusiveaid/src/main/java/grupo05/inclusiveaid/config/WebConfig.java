@@ -23,7 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
      * Define quais origens, métodos e headers são permitidos nas requisições cross-origin.
      * 
      * Configurações implementadas:
-     * - Origens permitidas: localhost:3000 e localhost:8080
+     * - Origens permitidas: localhost em várias portas e todas as origens para desenvolvimento
      * - Métodos HTTP permitidos: GET, POST, PUT, DELETE, OPTIONS, PATCH
      * - Todos os headers são permitidos
      * - Header de autorização é exposto
@@ -35,12 +35,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://localhost:8080")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+                .allowedOrigins("*")
+                .allowedMethods("*")
                 .allowedHeaders("*")
-                .exposedHeaders("Authorization")
-                .allowCredentials(true)
-                .maxAge(3600);
+                .allowCredentials(false);
     }
 
     /**

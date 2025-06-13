@@ -26,7 +26,7 @@ public class SessionServiceImpl implements SessionService {
   public SessionDTO create(SessionDTO dto) {
     userRepo.findById(dto.getUserId())
       .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
-    dto.setStartedAt(Instant.now());
+    dto.setStartTime(Instant.now().toString());
     return mapper.toDto(repo.save(mapper.toEntity(dto)));
   }
 
@@ -43,10 +43,12 @@ public class SessionServiceImpl implements SessionService {
 
   @Override
   public SessionDTO update(Long id,SessionDTO dto) {
-    Session e = repo.findById(id)
-      .orElseThrow(() -> new ResourceNotFoundException("Session não encontrada"));
-    e.setEndedAt(dto.getEndedAt());
-    return mapper.toDto(repo.save(e));
+    if (!repo.existsById(id))
+      throw new ResourceNotFoundException("Session não encontrada");
+    dto.setEndTime(Instant.now().toString());
+    Session updated = mapper.toEntity(dto);
+    updated.setId(id);
+    return mapper.toDto(repo.save(updated));
   }
 
   @Override

@@ -10,7 +10,7 @@ import jakarta.validation.constraints.*;
  * @author Grupo 05
  * @version 1.0
  */
-@Data @Builder
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class DisabilityTypeDTO {
     /**
      * Interface para validação na criação de um novo tipo de deficiência.

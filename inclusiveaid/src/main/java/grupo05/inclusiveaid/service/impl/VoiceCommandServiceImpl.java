@@ -4,7 +4,6 @@ import grupo05.inclusiveaid.dto.VoiceCommandDTO;
 import grupo05.inclusiveaid.entity.VoiceCommand;
 import grupo05.inclusiveaid.exception.ResourceNotFoundException;
 import grupo05.inclusiveaid.mapper.VoiceCommandMapper;
-import grupo05.inclusiveaid.repository.SessionRepository;
 import grupo05.inclusiveaid.repository.VoiceCommandRepository;
 import grupo05.inclusiveaid.service.VoiceCommandService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ import java.time.Instant;
 public class VoiceCommandServiceImpl implements VoiceCommandService {
   private final VoiceCommandRepository repo;
   private final VoiceCommandMapper mapper;
-  private final SessionRepository sessionRepo;
 
   /**
    * Cria um novo comando de voz associado a uma sessão existente.
@@ -35,9 +33,7 @@ public class VoiceCommandServiceImpl implements VoiceCommandService {
    */
   @Override
   public VoiceCommandDTO create(VoiceCommandDTO dto) {
-    sessionRepo.findById(dto.getSessionId())
-      .orElseThrow(() -> new ResourceNotFoundException("Session não encontrada"));
-    dto.setTimestamp(Instant.now());
+    dto.setTimestamp(Instant.now().toString());
     return mapper.toDto(repo.save(mapper.toEntity(dto)));
   }
 
@@ -92,12 +88,7 @@ public class VoiceCommandServiceImpl implements VoiceCommandService {
     VoiceCommand existingCommand = repo.findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("VoiceCommand não encontrado"));
     
-    // Preserva o timestamp original
-    dto.setTimestamp(existingCommand.getTimestamp());
-    
-    // Atualiza a entidade com os novos valores
     mapper.updateEntity(dto, existingCommand);
-    
     return mapper.toDto(repo.save(existingCommand));
   }
 }
