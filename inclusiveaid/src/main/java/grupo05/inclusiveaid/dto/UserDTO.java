@@ -64,10 +64,9 @@ public class UserDTO {
     /**
      * Conjunto de identificadores dos tipos de deficiência associados ao usuário.
      */
+    @NotNull(groups = {Create.class, Update.class})
+    @Schema(description = "IDs dos tipos de deficiência associados ao usuário", example = "[1,2]", required = true)
     private Set<Long> disabilityTypeIds;
-
-    @Schema(description = "Tipo de deficiência do usuário", example = "VISUAL")
-    private String disabilityType;
 
     @Schema(description = "Observações adicionais sobre as necessidades do usuário", example = "Requer modo de alto contraste")
     private String notes;

@@ -63,7 +63,7 @@ public class Task {
      * Responsável pela execução da tarefa.
      * Pode ser um usuário ou um agente de IA designado.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "responsible_id")
     private Responsible responsible;
 }

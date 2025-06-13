@@ -206,4 +206,25 @@ Listagens aceitam os parâmetros query `page` (0-based) e `size` (default 10).
 * Os mapeamentos seguem a convenção REST (`/api/<recurso>`).  
 * Ao contribuir, siga o guia de estilo do **Google Java Format**.
 
+## Testes Automatizados
+A suíte de testes JUnit pode ser executada via:
+```bash
+mvn clean test
+```
+
+Caso ainda não existam testes para um módulo, utilize o template em `src/test/java/grupo05/inclusiveaid` e crie casos para serviços e controladores.
+
+## Apresentação
+A apresentação do projeto (slides) está disponível em:
+https://example.com/apresentacao-inclusiveaid
+
+## Novo recurso – Configurações específicas de deficiência
+| Recurso | Método | Caminho |
+|---------|--------|---------|
+| Config. Espec. Deficiência | GET | `/api/disability-specific-configs` |
+| Config. Espec. Deficiência | POST | `/api/disability-specific-configs` |
+| Config. Espec. Deficiência | GET | `/api/disability-specific-configs/{id}` |
+| Config. Espec. Deficiência | PUT | `/api/disability-specific-configs/{id}` |
+| Config. Espec. Deficiência | DELETE | `/api/disability-specific-configs/{id}` |
+
 

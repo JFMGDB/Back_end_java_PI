@@ -25,7 +25,7 @@ public class Session {
    * Usuário associado à sessão.
    * Referência ao usuário que está utilizando o sistema.
    */
-  @ManyToOne @JoinColumn(name="user_id")
+  @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
   private User user;
 
   /**

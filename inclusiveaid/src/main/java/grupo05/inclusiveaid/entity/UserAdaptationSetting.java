@@ -24,14 +24,14 @@ public class UserAdaptationSetting {
    * Usuário associado à configuração.
    * Referência ao usuário que possui estas preferências de adaptação.
    */
-  @ManyToOne @JoinColumn(name="user_id")
+  @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
   private User user;
 
   /**
    * Adaptação associada à configuração.
    * Referência à adaptação específica que pode ser habilitada ou desabilitada.
    */
-  @ManyToOne @JoinColumn(name="adaptation_id")
+  @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="adaptation_id")
   private Adaptation adaptation;
 
   /**

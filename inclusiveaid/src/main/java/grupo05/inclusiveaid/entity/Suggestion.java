@@ -24,7 +24,7 @@ public class Suggestion {
    * Análise de layout associada à sugestão.
    * Referência à análise que gerou esta sugestão de adaptação.
    */
-  @ManyToOne @JoinColumn(name="layout_analysis_id")
+  @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="layout_analysis_id")
   private LayoutAnalysis analysis;
 
   /**

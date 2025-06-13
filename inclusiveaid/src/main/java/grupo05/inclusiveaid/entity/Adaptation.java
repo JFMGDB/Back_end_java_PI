@@ -37,6 +37,6 @@ public class Adaptation {
    * Tipo de deficiência associado à adaptação.
    * Define para qual tipo de deficiência a adaptação é mais adequada.
    */
-  @ManyToOne @JoinColumn(name="disability_type_id")
+  @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="disability_type_id")
   private DisabilityType disabilityType;
 }

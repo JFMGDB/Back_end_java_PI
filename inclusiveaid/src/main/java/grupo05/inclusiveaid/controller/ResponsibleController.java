@@ -61,7 +61,7 @@ public class ResponsibleController {
         @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     public ResponseEntity<List<ResponsibleDTO>> getAllResponsible() {
-        List<ResponsibleDTO> responsibles = responsibleService.getAllResponsibles();
+        List<ResponsibleDTO> responsibles = responsibleService.listAll(0, Integer.MAX_VALUE).getContent();
         if (responsibles.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -91,7 +91,7 @@ public class ResponsibleController {
     public ResponseEntity<ResponsibleDTO> getResponsibleById(
         @Parameter(description = "ID do usuário responsável a ser recuperado", example = "1", required = true)
         @PathVariable Long id) {
-        return ResponseEntity.ok(responsibleService.getResponsibleById(id));
+        return ResponseEntity.ok(responsibleService.getById(id));
     }
 
     /**
@@ -128,7 +128,7 @@ public class ResponsibleController {
     public ResponseEntity<ResponsibleDTO> createResponsible(
         @Parameter(description = "Dados do usuário responsável", required = true)
         @Validated(ResponsibleDTO.Create.class) @RequestBody ResponsibleDTO responsibleDTO) {
-        return ResponseEntity.ok(responsibleService.createResponsible(responsibleDTO));
+        return ResponseEntity.ok(responsibleService.create(responsibleDTO));
     }
 
     /**
@@ -161,7 +161,7 @@ public class ResponsibleController {
         @PathVariable Long id,
         @Parameter(description = "Dados atualizados do usuário responsável", required = true)
         @Validated(ResponsibleDTO.Update.class) @RequestBody ResponsibleDTO responsibleDTO) {
-        return ResponseEntity.ok(responsibleService.updateResponsible(id, responsibleDTO));
+        return ResponseEntity.ok(responsibleService.update(id, responsibleDTO));
     }
 
     /**
@@ -185,7 +185,7 @@ public class ResponsibleController {
     public ResponseEntity<Void> deleteResponsible(
         @Parameter(description = "ID do usuário responsável a ser excluído", example = "1", required = true)
         @PathVariable Long id) {
-        responsibleService.deleteResponsible(id);
+        responsibleService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

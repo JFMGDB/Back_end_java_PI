@@ -25,7 +25,7 @@ public class Feedback {
    * Usuário que enviou o feedback.
    * Referência ao usuário que forneceu o comentário ou sugestão.
    */
-  @ManyToOne @JoinColumn(name="user_id")
+  @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
   private User user;
 
   /**

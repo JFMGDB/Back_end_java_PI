@@ -25,7 +25,7 @@ public class Subtitle {
    * Sessão à qual a legenda está associada.
    * Permite rastrear legendas dentro de uma sessão específica de uso.
    */
-  @ManyToOne @JoinColumn(name="session_id")
+  @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="session_id")
   private Session session;
 
   /**

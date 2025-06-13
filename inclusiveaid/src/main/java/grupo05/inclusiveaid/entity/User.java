@@ -79,7 +79,7 @@ public class User implements UserDetails {
    * Perfil de acesso do usuário no sistema.
    * Define as permissões e níveis de acesso (ex: ROLE_USER, ROLE_ADMIN).
    */
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "role_id", nullable = false)
   private Role role;
 

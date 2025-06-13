@@ -29,7 +29,7 @@ public class AgentInteraction {
      * Agente de IA que realizou a interação.
      * Referência ao agente responsável pela ação.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agent_id", nullable = false)
     private AIAgent agent;
 
@@ -37,7 +37,7 @@ public class AgentInteraction {
      * Usuário que participou da interação.
      * Referência ao usuário que recebeu a ação do agente.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

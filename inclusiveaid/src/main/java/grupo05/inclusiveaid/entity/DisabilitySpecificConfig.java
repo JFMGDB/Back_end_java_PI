@@ -26,7 +26,7 @@ public class DisabilitySpecificConfig {
      * Agente de IA associado a esta configuração.
      * Cada agente pode ter múltiplas configurações para diferentes tipos de deficiência.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agent_id", nullable = false)
     private AIAgent agent;
 
@@ -34,7 +34,7 @@ public class DisabilitySpecificConfig {
      * Tipo de deficiência para o qual esta configuração se aplica.
      * Define o contexto específico das adaptações.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "disability_type_id", nullable = false)
     private DisabilityType disabilityType;
 

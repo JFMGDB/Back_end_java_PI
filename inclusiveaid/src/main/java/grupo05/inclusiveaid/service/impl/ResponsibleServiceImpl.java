@@ -8,47 +8,36 @@ import grupo05.inclusiveaid.mapper.ResponsibleMapper;
 import grupo05.inclusiveaid.repository.ResponsibleRepository;
 import grupo05.inclusiveaid.repository.UserRepository;
 import grupo05.inclusiveaid.service.ResponsibleService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Serviço responsável pela gestão de responsáveis (pessoas designadas a executar tarefas e acompanhar usuários).
  */
 @Service
-@RequiredArgsConstructor
 public class ResponsibleServiceImpl implements ResponsibleService {
+
     private final ResponsibleRepository responsibleRepository;
     private final UserRepository userRepository;
     private final ResponsibleMapper responsibleMapper;
     private final PasswordEncoder passwordEncoder;
 
-    /**
-     * Recupera todos os responsáveis cadastrados.
-     *
-     * @return lista de responsáveis em DTO
-     */
-    @Override
-    public List<ResponsibleDTO> getAllResponsibles() {
-        return responsibleRepository.findAll().stream()
-            .map(responsibleMapper::toDTO)
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public ResponsibleDTO getResponsibleById(Long id) {
-        return responsibleRepository.findById(id)
-            .map(responsibleMapper::toDTO)
-            .orElseThrow(() -> new ResourceNotFoundException("Responsible not found"));
+    public ResponsibleServiceImpl(ResponsibleRepository responsibleRepository,
+                                  UserRepository userRepository,
+                                  ResponsibleMapper responsibleMapper,
+                                  PasswordEncoder passwordEncoder) {
+        this.responsibleRepository = responsibleRepository;
+        this.userRepository = userRepository;
+        this.responsibleMapper = responsibleMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     @Transactional
-    public ResponsibleDTO createResponsible(ResponsibleDTO responsibleDTO) {
+    public ResponsibleDTO create(ResponsibleDTO responsibleDTO) {
         User user = userRepository.findById(responsibleDTO.getUserId())
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -61,7 +50,7 @@ public class ResponsibleServiceImpl implements ResponsibleService {
 
     @Override
     @Transactional
-    public ResponsibleDTO updateResponsible(Long id, ResponsibleDTO responsibleDTO) {
+    public ResponsibleDTO update(Long id, ResponsibleDTO responsibleDTO) {
         Responsible existingResponsible = responsibleRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Responsible not found"));
 
@@ -80,7 +69,7 @@ public class ResponsibleServiceImpl implements ResponsibleService {
 
     @Override
     @Transactional
-    public void deleteResponsible(Long id) {
+    public void delete(Long id) {
         if (!responsibleRepository.existsById(id)) {
             throw new ResourceNotFoundException("Responsible not found");
         }
@@ -89,5 +78,18 @@ public class ResponsibleServiceImpl implements ResponsibleService {
 
     private boolean isPasswordUpdateRequired(String newPassword) {
         return newPassword != null && !newPassword.trim().isEmpty();
+    }
+
+    @Override
+    public ResponsibleDTO getById(Long id) {
+        Responsible responsible = responsibleRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Responsible not found"));
+        return responsibleMapper.toDTO(responsible);
+    }
+
+    @Override
+    public Page<ResponsibleDTO> listAll(int page, int size) {
+        return responsibleRepository.findAll(PageRequest.of(page, size))
+            .map(responsibleMapper::toDTO);
     }
 }

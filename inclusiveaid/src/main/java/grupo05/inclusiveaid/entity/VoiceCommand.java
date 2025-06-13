@@ -25,7 +25,7 @@ public class VoiceCommand {
    * Sessão à qual o comando de voz está associado.
    * Permite rastrear comandos dentro de uma sessão específica de uso.
    */
-  @ManyToOne @JoinColumn(name="session_id")
+  @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="session_id")
   private Session session;
 
   /**

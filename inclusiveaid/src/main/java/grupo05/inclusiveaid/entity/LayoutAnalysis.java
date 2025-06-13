@@ -25,7 +25,7 @@ public class LayoutAnalysis {
    * Sessão à qual a análise está associada.
    * Permite rastrear análises dentro de uma sessão específica de uso.
    */
-  @ManyToOne @JoinColumn(name="session_id")
+  @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="session_id")
   private Session session;
 
   /**
