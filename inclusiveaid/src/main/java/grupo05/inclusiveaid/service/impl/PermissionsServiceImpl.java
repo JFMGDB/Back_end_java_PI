@@ -14,8 +14,10 @@ import grupo05.inclusiveaid.service.PermissionsService;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Implementação do serviço de permissões.
- * Contém a lógica de negócio para operações relacionadas às permissões de usuários.
+ * Serviço responsável pela gestão de permissões de acesso do sistema.
+ * <p>
+ * Possibilita criar, consultar, atualizar, remover e listar permissões garantindo
+ * integridade dos dados por meio de validações e tratamento de exceções.
  */
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,12 @@ public class PermissionsServiceImpl implements PermissionsService {
     private final PermissionsRepository repository;
     private final PermissionsMapper mapper;
     
+    /**
+     * Cria uma nova permissão.
+     *
+     * @param dto dados da permissão
+     * @return permissão criada em DTO
+     */
     @Override
     @Transactional
     public PermissionsDTO create(PermissionsDTO dto) {
@@ -43,6 +51,13 @@ public class PermissionsServiceImpl implements PermissionsService {
         return mapper.toDTO(entity);
     }
     
+    /**
+     * Obtém detalhes de uma permissão pelo ID.
+     *
+     * @param id identificador da permissão
+     * @return DTO da permissão
+     * @throws ResourceNotFoundException caso a permissão não exista
+     */
     @Override
     @Transactional(readOnly = true)
     public PermissionsDTO getById(Long id) {
@@ -51,6 +66,13 @@ public class PermissionsServiceImpl implements PermissionsService {
             .orElseThrow(() -> new ResourceNotFoundException("Permissão não encontrada com ID: " + id));
     }
     
+    /**
+     * Lista permissões de forma paginada.
+     *
+     * @param page número da página
+     * @param size tamanho da página
+     * @return página contendo permissões
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<PermissionsDTO> listAll(int page, int size) {
@@ -58,6 +80,13 @@ public class PermissionsServiceImpl implements PermissionsService {
             .map(mapper::toDTO);
     }
     
+    /**
+     * Atualiza uma permissão existente.
+     *
+     * @param id  identificador da permissão
+     * @param dto novos dados
+     * @return permissão atualizada em DTO
+     */
     @Override
     @Transactional
     public PermissionsDTO update(Long id, PermissionsDTO dto) {
@@ -79,6 +108,12 @@ public class PermissionsServiceImpl implements PermissionsService {
         return mapper.toDTO(existingPermission);
     }
     
+    /**
+     * Remove uma permissão pelo ID.
+     *
+     * @param id identificador da permissão
+     * @throws ResourceNotFoundException caso a permissão não exista
+     */
     @Override
     @Transactional
     public void delete(Long id) {

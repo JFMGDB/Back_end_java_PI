@@ -19,7 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
- * Implementação de AuthService.
+ * Serviço responsável por operações de autenticação e registro de usuários.
+ * <p>
+ * Implementa a emissão de JWT, autenticação via Spring Security e carregamento
+ * de {@link UserDetails} a partir do e-mail cadastrado.
  */
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -37,9 +40,17 @@ public class AuthServiceImpl implements AuthService {
   @Autowired
   @Lazy
   public void setAuthManager(AuthenticationManager authManager) {
+    // Setter injetado tardiamente para evitar dependência circular
     this.authManager = authManager;
   }
 
+  /**
+   * Autentica um usuário com base nas credenciais informadas e gera um token JWT.
+   *
+   * @param req objeto contendo e-mail e senha para autenticação
+   * @return {@link AuthResponse} contendo o token JWT válido
+   * @throws UsernameNotFoundException se o usuário não for encontrado
+   */
   @Override
   public AuthResponse authenticate(AuthRequest req) {
     // autentica pelo Spring
@@ -52,6 +63,12 @@ public class AuthServiceImpl implements AuthService {
     return new AuthResponse(token);
   }
 
+  /**
+   * Realiza login do usuário e devolve um token JWT.
+   *
+   * @param request credenciais de login
+   * @return {@link LoginResponse} com token JWT
+   */
   @Override
   public LoginResponse login(LoginRequest request) {
     authManager.authenticate(
@@ -62,6 +79,12 @@ public class AuthServiceImpl implements AuthService {
     return new LoginResponse(token);
   }
 
+  /**
+   * Registra um novo usuário na base de dados.
+   *
+   * @param request dados do usuário a ser criado
+   * @throws RuntimeException caso o e-mail já esteja em uso
+   */
   @Override
   public void register(RegisterRequest request) {
     if (userRepo.existsByEmail(request.getEmail())) {
@@ -74,6 +97,13 @@ public class AuthServiceImpl implements AuthService {
     userRepo.save(user);
   }
 
+  /**
+   * Carrega {@link UserDetails} pelo e-mail (username).
+   *
+   * @param username e-mail do usuário
+   * @return detalhes do usuário para autenticação
+   * @throws UsernameNotFoundException caso o usuário não seja encontrado
+   */
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     return userRepo.findByEmail(username)

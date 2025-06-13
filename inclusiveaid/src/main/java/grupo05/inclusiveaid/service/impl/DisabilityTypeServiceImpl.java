@@ -11,7 +11,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 /**
- * Implementação de DisabilityTypeService.
+ * Serviço responsável pela manutenção dos tipos de deficiência suportados pelo sistema.
  */
 @Service
 @RequiredArgsConstructor

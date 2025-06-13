@@ -26,6 +26,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+ * Serviço de alto nível que coordena as interações com agentes de IA responsáveis por diferentes funcionalidades de acessibilidade.
+ */
 @Service
 @RequiredArgsConstructor
 public class AIAgentServiceImpl implements AIAgentService {
@@ -145,7 +148,7 @@ public class AIAgentServiceImpl implements AIAgentService {
     @Transactional
     public void updateAIModel(Long agentId, String modelType, String modelVersion) {
         AIAgent agent = getAgentEntity(agentId);
-        // Update model configuration based on type
+        // Atualiza a configuração do modelo com base no tipo
         switch (modelType.toLowerCase()) {
             case "nlp":
                 agent.getNlpConfig().setLanguageModel(modelVersion);
@@ -167,7 +170,7 @@ public class AIAgentServiceImpl implements AIAgentService {
         aiExternalService.trainModel(trainingData, agent.getNlpConfig());
     }
 
-    // Helper methods
+    // Métodos auxiliares
     private AIAgent getAgentEntity(Long id) {
         return agentRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Agent not found with id: " + id));
@@ -194,7 +197,7 @@ public class AIAgentServiceImpl implements AIAgentService {
         return mapToInteractionDTO(interaction);
     }
 
-    // Mapping methods
+    // Métodos de mapeamento
     private AIAgentDTO mapToDTO(AIAgent agent) {
         return AIAgentDTO.builder()
             .id(agent.getId())
@@ -295,5 +298,5 @@ public class AIAgentServiceImpl implements AIAgentService {
             .build();
     }
 
-    // Additional mapping methods for configs...
+    // Métodos adicionais de mapeamento para configurações...
 } 

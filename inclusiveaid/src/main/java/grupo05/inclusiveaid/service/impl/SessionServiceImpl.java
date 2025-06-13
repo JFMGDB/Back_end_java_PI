@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 
 /**
- * Implementação de SessionService.
+ * Serviço que gerencia sessões de uso do sistema, incluindo seu ciclo de vida (início e término).
  */
 @Service
 @RequiredArgsConstructor

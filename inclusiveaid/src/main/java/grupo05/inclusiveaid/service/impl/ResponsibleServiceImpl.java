@@ -16,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Serviço responsável pela gestão de responsáveis (pessoas designadas a executar tarefas e acompanhar usuários).
+ */
 @Service
 @RequiredArgsConstructor
 public class ResponsibleServiceImpl implements ResponsibleService {
@@ -24,6 +27,11 @@ public class ResponsibleServiceImpl implements ResponsibleService {
     private final ResponsibleMapper responsibleMapper;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Recupera todos os responsáveis cadastrados.
+     *
+     * @return lista de responsáveis em DTO
+     */
     @Override
     public List<ResponsibleDTO> getAllResponsibles() {
         return responsibleRepository.findAll().stream()

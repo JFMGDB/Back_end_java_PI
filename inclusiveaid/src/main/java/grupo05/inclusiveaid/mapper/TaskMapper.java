@@ -26,6 +26,8 @@ public interface TaskMapper {
      * @return DTO da tarefa
      */
     @Mapping(source = "responsible.id", target = "responsibleId")
+    @Mapping(target = "completedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     TaskDTO toDto(Task entity);
     
     /**

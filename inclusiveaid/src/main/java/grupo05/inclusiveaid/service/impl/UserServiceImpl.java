@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementação do serviço de usuários.
- * Contém a lógica de negócio para operações relacionadas aos usuários.
+ * Serviço responsável pelo gerenciamento de usuários.
+ * <p>
+ * Provê operações CRUD, controle de senha (com hashing) e listagem paginada,
+ * utilizando {@link UserMapper} para conversão entre entidade e DTO.
  */
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,12 @@ public class UserServiceImpl implements UserService {
   private final UserMapper userMapper;
   private final PasswordEncoder passwordEncoder;
 
+  /**
+   * Cria um novo usuário no sistema.
+   *
+   * @param dto dados do usuário a ser criado
+   * @return usuário criado convertido em DTO
+   */
   @Override
   @Transactional
   public UserDTO create(UserDTO dto) {
@@ -32,18 +40,40 @@ public class UserServiceImpl implements UserService {
     return userMapper.toDto(userRepository.save(user));
   }
 
+  /**
+   * Recupera um usuário pelo seu ID.
+   *
+   * @param id identificador do usuário
+   * @return DTO do usuário encontrado
+   * @throws ResourceNotFoundException caso o usuário não exista
+   */
   @Override
   public UserDTO getById(Long id) {
     return userMapper.toDto(userRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("User not found")));
   }
 
+  /**
+   * Lista usuários de forma paginada.
+   *
+   * @param page número da página
+   * @param size tamanho da página
+   * @return página contendo usuários convertidos em DTO
+   */
   @Override
   public Page<UserDTO> listAll(int page, int size) {
     return userRepository.findAll(PageRequest.of(page, size))
         .map(userMapper::toDto);
   }
 
+  /**
+   * Atualiza um usuário existente.
+   *
+   * @param id  identificador do usuário
+   * @param dto novos dados do usuário
+   * @return usuário atualizado em DTO
+   * @throws ResourceNotFoundException caso o usuário não exista
+   */
   @Override
   @Transactional
   public UserDTO update(Long id, UserDTO dto) {
@@ -62,6 +92,12 @@ public class UserServiceImpl implements UserService {
     return userMapper.toDto(userRepository.save(user));
   }
 
+  /**
+   * Remove um usuário pelo ID.
+   *
+   * @param id identificador do usuário
+   * @throws ResourceNotFoundException caso o usuário não exista
+   */
   @Override
   @Transactional
   public void delete(Long id) {

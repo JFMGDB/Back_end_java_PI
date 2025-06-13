@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 
 /**
- * Implementação de FeedbackService.
+ * Serviço responsável pelo gerenciamento de feedbacks submetidos pelos usuários.
  */
 @Service
 @RequiredArgsConstructor
@@ -21,6 +21,13 @@ public class FeedbackServiceImpl implements FeedbackService {
   private final FeedbackMapper mapper;
   private final UserRepository userRepo;
 
+  /**
+   * Cria um novo feedback para um usuário existente.
+   *
+   * @param dto dados do feedback
+   * @return feedback criado em DTO
+   * @throws ResourceNotFoundException caso o usuário não exista
+   */
   @Override
   public FeedbackDTO create(FeedbackDTO dto) {
     // garante que usuário existe

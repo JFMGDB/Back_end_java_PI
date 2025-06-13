@@ -20,6 +20,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+/**
+ * Serviço que encapsula chamadas a provedores externos de IA (ex.: OpenAI).
+ * <p>
+ * Responsável por delegar tarefas como geração de legendas, análise e adaptação
+ * de layouts, processamento de comandos de voz e automação de tarefas.
+ * Quando a integração está desativada via propriedade <code>openai.enabled</code>,
+ * métodos retornam respostas mock para facilitar desenvolvimento offline.
+ */
 public class AIExternalServiceImpl implements AIExternalService {
 
     private final RestTemplate restTemplate;
@@ -35,6 +43,13 @@ public class AIExternalServiceImpl implements AIExternalService {
     private boolean openaiEnabled;
 
     @Override
+    /**
+     * Processa um comando de voz utilizando modelo de linguagem.
+     *
+     * @param command texto já transcrito do comando de voz
+     * @param config  configurações de NLP a serem utilizadas
+     * @return resposta textual gerada pelo modelo ou valor mock se desativado
+     */
     public String processVoiceCommand(String command, NLPConfig config) {
         if (!openaiEnabled) {
             return "OpenAI integration is disabled. This is a mock response for: " + command;
@@ -48,6 +63,13 @@ public class AIExternalServiceImpl implements AIExternalService {
     }
 
     @Override
+    /**
+     * Analisa a acessibilidade de um layout.
+     *
+     * @param layoutData representação do layout (ex.: JSON, HTML)
+     * @param config      configurações de processamento de imagem
+     * @return resultado da análise ou mock
+     */
     public String analyzeLayout(String layoutData, ImageProcessingConfig config) {
         if (!openaiEnabled) {
             return "OpenAI integration is disabled. This is a mock response for layout analysis.";
@@ -61,6 +83,13 @@ public class AIExternalServiceImpl implements AIExternalService {
     }
 
     @Override
+    /**
+     * Gera legenda a partir de transcrição de áudio.
+     *
+     * @param audioText texto transcrito do áudio
+     * @param config    configurações de NLP
+     * @return legenda gerada ou mock
+     */
     public String generateSubtitle(String audioText, NLPConfig config) {
         if (!openaiEnabled) {
             return "OpenAI integration is disabled. This is a mock response for subtitle generation.";
@@ -74,6 +103,13 @@ public class AIExternalServiceImpl implements AIExternalService {
     }
 
     @Override
+    /**
+     * Descreve uma imagem para fins de acessibilidade.
+     *
+     * @param imageData dados (base64 ou URL) da imagem
+     * @param config    configurações de processamento de imagem
+     * @return descrição gerada ou mock
+     */
     public String describeImage(String imageData, ImageProcessingConfig config) {
         if (!openaiEnabled) {
             return "OpenAI integration is disabled. This is a mock response for image description.";
@@ -87,6 +123,13 @@ public class AIExternalServiceImpl implements AIExternalService {
     }
 
     @Override
+    /**
+     * Adapta um layout para melhor acessibilidade.
+     *
+     * @param layoutData dados do layout a ser adaptado
+     * @param config     configurações de imagem
+     * @return layout adaptado ou mock
+     */
     public String adaptLayout(String layoutData, ImageProcessingConfig config) {
         if (!openaiEnabled) {
             return "OpenAI integration is disabled. This is a mock response for layout adaptation.";
@@ -100,6 +143,13 @@ public class AIExternalServiceImpl implements AIExternalService {
     }
 
     @Override
+    /**
+     * Automatiza uma tarefa descrita textualmente.
+     *
+     * @param taskDescription descrição textual da tarefa
+     * @param config          configurações de NLP
+     * @return resposta de automação ou mock
+     */
     public String automateTask(String taskDescription, NLPConfig config) {
         if (!openaiEnabled) {
             return "OpenAI integration is disabled. This is a mock response for task automation.";
@@ -113,17 +163,24 @@ public class AIExternalServiceImpl implements AIExternalService {
     }
 
     @Override
+    /**
+     * Treina (ou ajusta) um modelo de IA com dados específicos.
+     * Atualmente não implementado — marcador para futura expansão.
+     *
+     * @param trainingData dados de treinamento
+     * @param config       configurações de NLP
+     */
     public void trainModel(String trainingData, NLPConfig config) {
         if (!openaiEnabled) {
             return;
         }
-        // Implement model training logic here
-        // This would typically involve fine-tuning the model with the provided data
+        // Implementa a lógica de treinamento do modelo aqui
+        // Normalmente envolveria ajuste fino do modelo com os dados fornecidos
     }
 
     private String callOpenAI(Map<String, Object> request) {
         try {
-            // Add API key to headers
+            // Adiciona a API key nos headers
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "Bearer " + apiKey);
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -137,7 +194,7 @@ public class AIExternalServiceImpl implements AIExternalService {
                 new ParameterizedTypeReference<Map<String, Object>>() {}
             );
 
-            // Extract the response text from OpenAI's response format
+            // Extrai o texto da resposta no formato retornado pela OpenAI
             Map<String, Object> responseBody = response.getBody();
             if (responseBody != null && responseBody.containsKey("choices")) {
                 List<Map<String, Object>> choices = objectMapper.convertValue(
@@ -152,7 +209,7 @@ public class AIExternalServiceImpl implements AIExternalService {
             
             return "Error processing AI request";
         } catch (Exception e) {
-            // Log the error and return a fallback response
+            // Registra o erro e retorna uma resposta de fallback
             return "Error: " + e.getMessage();
         }
     }

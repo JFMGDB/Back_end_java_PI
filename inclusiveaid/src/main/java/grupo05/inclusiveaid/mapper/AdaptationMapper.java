@@ -16,6 +16,7 @@ public interface AdaptationMapper {
     Adaptation toEntity(AdaptationDTO dto);
 
     @Mapping(target = "disabilityTypeId", source = "disabilityType.id")
+    @Mapping(target = "timestamp", ignore = true)
     AdaptationDTO toDto(Adaptation entity);
 
     @Mapping(target = "id", ignore = true)
