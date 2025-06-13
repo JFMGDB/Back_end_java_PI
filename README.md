@@ -41,7 +41,7 @@ A aplicação será iniciada em `http://localhost:8080`.
 
 ### Banco de Dados H2
 * Console: `http://localhost:8080/h2-console`  
-* JDBC URL: `jdbc:h2:file:./inclusiveaid_db`  
+* JDBC URL: `jdbc:h2:mem:inclusiveaid_db`  
 * Usuário: `sa` (sem senha)
 
 Scripts de criação (`schema.sql`) e carga (`data.sql`) são executados automaticamente no primeiro start.
