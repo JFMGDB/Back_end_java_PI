@@ -13,13 +13,12 @@ import lombok.Data;
 public class LanguageDTO {
     @Schema(description = "Unique identifier of the language", example = "1")
     private Long id;
-@NotBlank(message = "Code is required") 
-@Size(min = 2, max = 10, message = "Code must be between 2 and 10 
-characters") 
-@Schema(description = "ISO code of the language", example = "pt") 
-private String code;
+    @NotBlank(message = "Code is required")
+    @Size(min = 2, max = 10, message = "Code must be between 2 and 10 characters")
+    @Schema(description = "ISO code of the language", example = "pt")
+    private String code;
     @NotBlank(message = "Name is required")
     @Size(max = 100, message = "Name must be up to 100 characters")
     @Schema(description = "Name of the language", example = "Português")
     private String name;
-}
+}   

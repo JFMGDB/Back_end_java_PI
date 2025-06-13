@@ -25,11 +25,10 @@ public class Language {
     /**
      * Código ISO do idioma (ex: pt, en, es).
      */
-@NotBlank(message = "Code is required") 
-@Size(min = 2, max = 10, message = "Code must be between 2 and 10 
-characters") 
-@Column(nullable = false, unique = true, length = 10) 
-private String code;
+    @NotBlank(message = "Code is required")
+    @Size(min = 2, max = 10, message = "Code must be between 2 and 10 characters")
+    @Column(nullable = false, unique = true, length = 10)
+    private String code;
     /**
      * Nome do idioma.
      */

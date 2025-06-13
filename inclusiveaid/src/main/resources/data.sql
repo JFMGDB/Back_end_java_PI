@@ -59,3 +59,7 @@ INSERT INTO subtitles (session_id,text,timestamp) VALUES
 
 INSERT INTO voice_commands (session_id,command,result,timestamp) VALUES
   (1,'abrir menu','menu aberto',NOW());
+
+-- Insert default tags
+INSERT INTO tags (name) VALUES ('Accessibility') ON CONFLICT DO NOTHING;
+INSERT INTO tags (name) VALUES ('UI') ON CONFLICT DO NOTHING;

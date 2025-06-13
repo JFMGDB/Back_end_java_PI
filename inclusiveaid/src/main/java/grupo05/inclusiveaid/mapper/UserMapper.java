@@ -3,8 +3,12 @@ package grupo05.inclusiveaid.mapper;
 import grupo05.inclusiveaid.dto.UserDTO;
 import grupo05.inclusiveaid.entity.User;
 import grupo05.inclusiveaid.entity.DisabilityType;
-import org.mapstruct.*;
-import java.util.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Interface responsável pelo mapeamento entre entidades User e DTOs.
@@ -22,6 +26,7 @@ public interface UserMapper {
   @Mapping(source = "roleId", target = "role.id")
   @Mapping(target = "disabilityTypes", expression = "java(toEntities(dto.getDisabilityTypeIds()))")
   @Mapping(target = "adaptations", ignore = true)
+  @Mapping(target = "disabilityType", ignore = true)
   User toEntity(UserDTO dto);
 
   default Set<Long> toIds(Set<DisabilityType> types) {
@@ -53,5 +58,6 @@ public interface UserMapper {
   @Mapping(target = "disabilityTypes", ignore = true)
   @Mapping(target = "role", ignore = true)
   @Mapping(target = "authorities", ignore = true)
+  @Mapping(target = "disabilityType", ignore = true)
   void updateEntity(UserDTO dto, @MappingTarget User user);
 }

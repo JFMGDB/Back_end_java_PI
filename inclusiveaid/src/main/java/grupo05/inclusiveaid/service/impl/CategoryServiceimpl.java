@@ -10,54 +10,48 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementação de {@link CategoryService}.
+ * Serviço CRUD para Category.
  */
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
-    private final CategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
+
+    private final CategoryRepository repo;
+    private final CategoryMapper mapper;
 
     @Override
-    @Transactional
     public CategoryDTO create(CategoryDTO dto) {
-        Category category = categoryMapper.toEntity(dto);
-        return categoryMapper.toDto(categoryRepository.save(category));
+        Category entity = mapper.toEntity(dto);
+        return mapper.toDto(repo.save(entity));
     }
 
-@Override 
-public CategoryDTO getById(Long id) { 
-return categoryMapper.toDto(categoryRepository.findById(id) 
-.orElseThrow(() -> new ResourceNotFoundException("Category 
-not found"))); 
-}
+    @Override
+    public CategoryDTO getById(Long id) {
+        Category entity = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        return mapper.toDto(entity);
+    }
 
     @Override
     public Page<CategoryDTO> listAll(int page, int size) {
-        return categoryRepository.findAll(PageRequest.of(page, size))
-                .map(categoryMapper::toDto);
+        return repo.findAll(PageRequest.of(page, size)).map(mapper::toDto);
     }
 
     @Override
-    @Transactional
     public CategoryDTO update(Long id, CategoryDTO dto) {
-        if (!categoryRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Category not found");
-        }
-        Category category = categoryMapper.toEntity(dto);
-        category.setId(id);
-        return categoryMapper.toDto(categoryRepository.save(category));
+        Category entity = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        mapper.updateEntity(dto, entity);
+        return mapper.toDto(repo.save(entity));
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
-        if (!categoryRepository.existsById(id)) {
+        if (!repo.existsById(id)) {
             throw new ResourceNotFoundException("Category not found");
         }
-        categoryRepository.deleteById(id);
+        repo.deleteById(id);
     }
-}
+} 
