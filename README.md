@@ -1,213 +1,209 @@
-# Projeto InclusiveAID - Backend
+# InclusiveAID – Backend
 
-## Introdução
-O InclusiveAID é um assistente de inclusão digital que visa proporcionar uma experiência mais acessível e inclusiva para pessoas com deficiência. Este backend fornece uma API RESTful robusta que suporta autenticação segura, gerenciamento de usuários, tipos de deficiência, adaptações, sessões, análises de layout, sugestões proativas, legendas em tempo real e comandos de voz.
+## Visão Geral
+O **InclusiveAID** é um assistente de inclusão digital que fornece recursos de acessibilidade para pessoas com deficiência. Este repositório contém uma API RESTful desenvolvida em **Java 21** com **Spring Boot 3**, organizada em camadas (MVC) e plenamente documentada com **OpenAPI/Swagger**.
 
-## Visão Geral da Arquitetura
-A API foi desenvolvida utilizando:
-- Java 21
-- Spring Boot 3
-- Arquitetura em camadas (MVC)
+Principais funcionalidades:
+* Autenticação e autorização via **JWT**  
+* Gerenciamento de usuários, papéis e permissões  
+* CRUD de entidades relacionadas à acessibilidade (tipos de deficiência, adaptações, sugestões, comandos de voz, etc.)  
+* Agentes de IA para geração de legendas, descrição de imagens, análise/adaptação de layout e automação de tarefas  
+* Banco H2 embarcado com scripts de carga inicial  
+* Boas práticas de segurança (CORS, cabeçalhos, rate-limit, filtros de logging)  
 
-### Principais Tecnologias
-- Spring Data JPA - Persistência de dados
-- Spring Security - Segurança e autenticação
-- H2 Database - Banco de dados em memória
-- Lombok - Redução de código boilerplate
-- MapStruct - Mapeamento entre objetos
-- SpringDoc/Swagger - Documentação da API
+## Tecnologias Principais
+* Java 21  
+* Spring Boot 3 (Spring Web, Spring Data JPA, Spring Security)  
+* H2 Database  
+* Lombok & MapStruct  
+* SpringDoc-OpenAPI / Swagger UI  
+* Maven
 
-## Como Configurar e Executar o Projeto
+## Pré-requisitos
+1. **JDK 21** ou superior  
+2. **Maven 3.6+**
 
-### Pré-requisitos
-- JDK 21
-- Maven 3.6+
-
-### Configuração
-1. Clone o repositório:
+## Instalação
 ```bash
-git clone https://github.com/JFMGDB/Back_end_java_PI.git
-cd Back_end_java_PI
+# clone o projeto
+git clone <url-do-repositório>
+cd Back_end_java_PI/inclusiveaid
+
+# build
+mvn clean package -DskipTests
 ```
 
-2. Instale as dependências:
-```bash
-mvn clean install
-```
-
-3. Execute a aplicação:
+## Execução
 ```bash
 mvn spring-boot:run
 ```
+A aplicação será iniciada em `http://localhost:8080`.
 
-### Acesso ao H2 Console
-- URL: http://localhost:8080/h2-console
-- JDBC URL: jdbc:h2:file:./inclusiveaid_db
-- Username: sa
-- Password: (em branco)
+### Banco de Dados H2
+* Console: `http://localhost:8080/h2-console`  
+* JDBC URL: `jdbc:h2:file:./inclusiveaid_db`  
+* Usuário: `sa` (sem senha)
+
+Scripts de criação (`schema.sql`) e carga (`data.sql`) são executados automaticamente no primeiro start.
+
+### Documentação Swagger
+A documentação interativa pode ser acessada em:
+`http://localhost:8080/swagger-ui.html`  *(ou* `/swagger-ui/index.html` *)*
+
+## Autenticação JWT
+1. Realize login para obter o token:
+   ```http
+   POST /api/auth/login
+   Content-Type: application/json
+
+   {
+     "email": "admin@ex.com",
+     "password": "senha123"
+   }
+   ```
+2. Copie o valor retornado em `token` e envie nas próximas requisições:
+   ```text
+   Authorization: Bearer <JWT>
+   ```
 
 ## Estrutura de Diretórios
 ```
 src/
 ├─ main/
-│  ├── java/com/company/aid/
-│  │  ├── config/             # Configurações (CORS, Security, Swagger)
-│  │  ├── security/           # Implementação JWT e filtros
-│  │  ├── entity/             # Entidades JPA
-│  │  ├── repository/         # Interfaces JpaRepository
-│  │  ├── dto/                # Data Transfer Objects
-│  │  ├── mapper/             # Interfaces MapStruct
-│  │  ├── service/            # Interfaces de serviço
-│  │  ├── service/impl/       # Implementações dos serviços
-│  │  ├── controller/         # Controladores REST
-│  │  └── exception/          # Tratamento global de erros
-│  └── resources/
-│      ├── application.properties
-│      ├── schema.sql
-│      └── data.sql
-└─ test/                      # Testes de contexto
+│  ├─ java/grupo05/inclusiveaid/
+│  │  ├─ config/          # Configurações gerais e de segurança
+│  │  ├─ security/        # Filtro e utilidades JWT
+│  │  ├─ controller/      # REST Controllers
+│  │  ├─ service/ (+impl) # Camada de negócio
+│  │  ├─ repository/      # Interfaces JPA
+│  │  ├─ entity/          # Entidades
+│  │  ├─ dto/             # Data Transfer Objects
+│  │  ├─ mapper/          # MapStruct mappers
+│  │  └─ exception/       # Tratamento global de erros
+│  └─ resources/
+│     ├─ application.properties
+│     ├─ schema.sql
+│     └─ data.sql
+└─ test/                  # Testes (contexto)
 ```
 
-## Autenticação e Segurança
-A API utiliza autenticação via JWT (JSON Web Token).
-
-### Obtenção do Token
-```http
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "email": "admin@ex.com",
-  "password": "senha123"
-}
-```
-
-### Uso do Token
-Para acessar rotas protegidas, inclua o header:
-```
-Authorization: Bearer <JWT>
-```
-
-## Documentação da API (Swagger)
-- URL: http://localhost:8080/swagger-ui/index.html
-
-Para testar endpoints protegidos:
-1. Acesse a interface do Swagger
-2. Clique em "Authorize"
-3. Cole o token JWT no formato: `Bearer <JWT>`
-
-## Endpoints da API
-
+## Endpoints Principais
 | Recurso | Método | Caminho | Descrição |
 |---------|--------|---------|-----------|
-| Auth | POST | /api/auth/login | Gera JWT a partir de email+senha |
-| Auth | POST | /api/auth/register | Registra novo usuário |
-| Auth | POST | /api/auth/refresh-token | Renova token JWT |
-| AIAgent | GET | /api/ai-agents | Lista todos os agentes de IA |
-| AIAgent | POST | /api/ai-agents | Cria novo agente de IA |
-| AIAgent | GET | /api/ai-agents/{id} | Busca agente por ID |
-| AIAgent | PUT | /api/ai-agents/{id} | Atualiza agente |
-| AIAgent | DELETE | /api/ai-agents/{id} | Remove agente |
-| AIAgent | POST | /api/ai-agents/{agentId}/users/{userId}/voice-command | Processa comando de voz do usuário |
-| AIAgent | POST | /api/ai-agents/{agentId}/users/{userId}/analyze-layout | Analisa layout para o usuário |
-| AIAgent | POST | /api/ai-agents/{agentId}/users/{userId}/suggest | Gera sugestões proativas |
-| AIAgent | POST | /api/ai-agents/{agentId}/users/{userId}/translate-libras | Traduz conteúdo para Libras |
-| Users | GET | /api/users | Lista usuários (paginado) |
-| Users | POST | /api/users | Cria novo usuário |
-| Users | GET | /api/users/{id} | Busca usuário por ID |
-| Users | PUT | /api/users/{id} | Atualiza usuário |
-| Users | DELETE | /api/users/{id} | Remove usuário |
-| Users | GET | /api/users/{id}/sessions | Lista sessões do usuário |
-| Users | GET | /api/users/{id}/adaptations | Lista adaptações do usuário |
-| Responsible | GET | /api/responsibles | Lista responsáveis |
-| Responsible | POST | /api/responsibles | Cria novo responsável |
-| Responsible | GET | /api/responsibles/{id} | Busca responsável por ID |
-| Responsible | PUT | /api/responsibles/{id} | Atualiza responsável |
-| Responsible | DELETE | /api/responsibles/{id} | Remove responsável |
-| Task | GET | /api/tasks | Lista tarefas |
-| Task | POST | /api/tasks | Cria nova tarefa |
-| Task | GET | /api/tasks/{id} | Busca tarefa por ID |
-| Task | PUT | /api/tasks/{id} | Atualiza tarefa |
-| Task | DELETE | /api/tasks/{id} | Remove tarefa |
-| Permissions | GET | /api/permissions | Lista permissões |
-| Permissions | POST | /api/permissions | Cria nova permissão |
-| Permissions | GET | /api/permissions/{id} | Busca permissão por ID |
-| Permissions | PUT | /api/permissions/{id} | Atualiza permissão |
-| Permissions | DELETE | /api/permissions/{id} | Remove permissão |
-| DisabilityTypes | GET | /api/disability-types | Lista tipos de deficiência |
-| DisabilityTypes | POST | /api/disability-types | Cria novo tipo |
-| DisabilityTypes | GET | /api/disability-types/{id} | Busca tipo por ID |
-| DisabilityTypes | PUT | /api/disability-types/{id} | Atualiza tipo |
-| DisabilityTypes | DELETE | /api/disability-types/{id} | Remove tipo |
-| Adaptations | GET | /api/adaptations | Lista adaptações |
-| Adaptations | POST | /api/adaptations | Cria nova adaptação |
-| Adaptations | GET | /api/adaptations/{id} | Busca adaptação por ID |
-| Adaptations | PUT | /api/adaptations/{id} | Atualiza adaptação |
-| Adaptations | DELETE | /api/adaptations/{id} | Remove adaptação |
-| LibrasTranslation | GET | /api/libras-translations | Lista traduções |
-| LibrasTranslation | POST | /api/libras-translations | Cria nova tradução |
-| LibrasTranslation | GET | /api/libras-translations/{id} | Busca tradução por ID |
-| LibrasTranslation | PUT | /api/libras-translations/{id} | Atualiza tradução |
-| LibrasTranslation | DELETE | /api/libras-translations/{id} | Remove tradução |
-| Sessions | GET | /api/sessions | Lista sessões |
-| Sessions | POST | /api/sessions | Cria nova sessão |
-| Sessions | GET | /api/sessions/{id} | Busca sessão por ID |
-| Sessions | PUT | /api/sessions/{id} | Atualiza sessão |
-| Sessions | DELETE | /api/sessions/{id} | Remove sessão |
-| LayoutAnalyses | GET | /api/layout-analyses | Lista análises |
-| LayoutAnalyses | POST | /api/layout-analyses | Cria nova análise |
-| LayoutAnalyses | GET | /api/layout-analyses/{id} | Busca análise por ID |
-| LayoutAnalyses | PUT | /api/layout-analyses/{id} | Atualiza análise |
-| LayoutAnalyses | DELETE | /api/layout-analyses/{id} | Remove análise |
-| Suggestions | GET | /api/suggestions | Lista sugestões |
-| Suggestions | POST | /api/suggestions | Cria nova sugestão |
-| Suggestions | GET | /api/suggestions/{id} | Busca sugestão por ID |
-| Suggestions | PUT | /api/suggestions/{id} | Atualiza sugestão |
-| Suggestions | DELETE | /api/suggestions/{id} | Remove sugestão |
-| Subtitles | GET | /api/subtitles | Lista legendas |
-| Subtitles | POST | /api/subtitles | Cria nova legenda |
-| Subtitles | GET | /api/subtitles/{id} | Busca legenda por ID |
-| Subtitles | PUT | /api/subtitles/{id} | Atualiza legenda |
-| Subtitles | DELETE | /api/subtitles/{id} | Remove legenda |
-| VoiceCommands | GET | /api/voice-commands | Lista comandos |
-| VoiceCommands | POST | /api/voice-commands | Cria novo comando |
-| VoiceCommands | GET | /api/voice-commands/{id} | Busca comando por ID |
-| VoiceCommands | PUT | /api/voice-commands/{id} | Atualiza comando |
-| VoiceCommands | DELETE | /api/voice-commands/{id} | Remove comando |
-| Feedbacks | GET | /api/feedbacks | Lista feedbacks |
-| Feedbacks | POST | /api/feedbacks | Cria novo feedback |
-| Feedbacks | GET | /api/feedbacks/{id} | Busca feedback por ID |
-| Feedbacks | PUT | /api/feedbacks/{id} | Atualiza feedback |
-| Feedbacks | DELETE | /api/feedbacks/{id} | Remove feedback |
+| Auth | POST | `/api/auth/login` | Autentica usuário e gera JWT |
+| Usuários | GET | `/api/usuarios` | Lista usuários (pag.) |
+| Usuários | POST | `/api/usuarios` | Cria usuário |
+| Usuários | GET | `/api/usuarios/{id}` | Busca usuário por ID |
+| Usuários | PUT | `/api/usuarios/{id}` | Atualiza usuário |
+| Usuários | DELETE | `/api/usuarios/{id}` | Remove usuário |
+| Papéis (Roles) | GET | `/api/roles` | Lista papéis |
+| Papéis (Roles) | POST | `/api/roles` | Cria papel |
+| Papéis (Roles) | GET | `/api/roles/{id}` | Busca papel |
+| Papéis (Roles) | PUT | `/api/roles/{id}` | Atualiza papel |
+| Papéis (Roles) | DELETE | `/api/roles/{id}` | Remove papel |
+| Permissões | GET | `/api/permissions` | Lista permissões |
+| Permissões | POST | `/api/permissions` | Cria permissão |
+| Permissões | GET | `/api/permissions/{id}` | Busca permissão |
+| Permissões | PUT | `/api/permissions/{id}` | Atualiza permissão |
+| Permissões | DELETE | `/api/permissions/{id}` | Remove permissão |
+| Tipos de Deficiência | GET | `/api/disability-types` | Lista tipos |
+| Tipos de Deficiência | POST | `/api/disability-types` | Cria tipo |
+| Tipos de Deficiência | GET | `/api/disability-types/{id}` | Busca tipo |
+| Tipos de Deficiência | PUT | `/api/disability-types/{id}` | Atualiza tipo |
+| Tipos de Deficiência | DELETE | `/api/disability-types/{id}` | Remove tipo |
+| Adaptações | GET | `/api/adaptations` | Lista adaptações |
+| Adaptações | POST | `/api/adaptations` | Cria adaptação |
+| Adaptações | GET | `/api/adaptations/{id}` | Busca adaptação |
+| Adaptações | PUT | `/api/adaptations/{id}` | Atualiza adaptação |
+| Adaptações | DELETE | `/api/adaptations/{id}` | Remove adaptação |
+| Config. Adaptação Usuário | GET | `/api/user-adaptation-settings` | Lista configs |
+| Config. Adaptação Usuário | POST | `/api/user-adaptation-settings` | Cria config |
+| Config. Adaptação Usuário | GET | `/api/user-adaptation-settings/{id}` | Busca config |
+| Config. Adaptação Usuário | PUT | `/api/user-adaptation-settings/{id}` | Atualiza config |
+| Config. Adaptação Usuário | DELETE | `/api/user-adaptation-settings/{id}` | Remove config |
+| Elementos de Layout | GET | `/api/layout-elements` | Lista elementos |
+| Elementos de Layout | POST | `/api/layout-elements` | Cria elemento |
+| Elementos de Layout | GET | `/api/layout-elements/{id}` | Busca elemento |
+| Elementos de Layout | PUT | `/api/layout-elements/{id}` | Atualiza elemento |
+| Elementos de Layout | DELETE | `/api/layout-elements/{id}` | Remove elemento |
+| Análises de Layout | GET | `/api/layout-analysis` | Lista análises |
+| Análises de Layout | POST | `/api/layout-analysis` | Cria análise |
+| Análises de Layout | GET | `/api/layout-analysis/{id}` | Busca análise |
+| Análises de Layout | DELETE | `/api/layout-analysis/{id}` | Remove análise |
+| Sessões | GET | `/api/sessions` | Lista sessões |
+| Sessões | POST | `/api/sessions` | Cria sessão |
+| Sessões | GET | `/api/sessions/{id}` | Busca sessão |
+| Sessões | DELETE | `/api/sessions/{id}` | Encerra sessão |
+| Feedback | GET | `/api/feedback` | Lista feedbacks |
+| Feedback | POST | `/api/feedback` | Cria feedback |
+| Feedback | GET | `/api/feedback/{id}` | Busca feedback |
+| Feedback | DELETE | `/api/feedback/{id}` | Remove feedback |
+| Sugestões | GET | `/api/suggestions` | Lista sugestões |
+| Sugestões | POST | `/api/suggestions` | Cria sugestão |
+| Sugestões | GET | `/api/suggestions/{id}` | Busca sugestão |
+| Sugestões | PUT | `/api/suggestions/{id}` | Atualiza sugestão |
+| Sugestões | DELETE | `/api/suggestions/{id}` | Remove sugestão |
+| Legendas | GET | `/api/subtitles` | Lista legendas |
+| Legendas | POST | `/api/subtitles` | Cria legenda |
+| Legendas | GET | `/api/subtitles/{id}` | Busca legenda |
+| Legendas | PUT | `/api/subtitles/{id}` | Atualiza legenda |
+| Legendas | DELETE | `/api/subtitles/{id}` | Remove legenda |
+| Traduções LIBRAS | GET | `/api/libras-translations` | Lista traduções |
+| Traduções LIBRAS | POST | `/api/libras-translations` | Cria tradução |
+| Traduções LIBRAS | GET | `/api/libras-translations/{id}` | Busca tradução |
+| Traduções LIBRAS | PUT | `/api/libras-translations/{id}` | Atualiza tradução |
+| Traduções LIBRAS | DELETE | `/api/libras-translations/{id}` | Remove tradução |
+| Comandos de Voz | GET | `/api/voice-commands` | Lista comandos |
+| Comandos de Voz | POST | `/api/voice-commands` | Cria comando |
+| Comandos de Voz | GET | `/api/voice-commands/{id}` | Busca comando |
+| Comandos de Voz | PUT | `/api/voice-commands/{id}` | Atualiza comando |
+| Comandos de Voz | DELETE | `/api/voice-commands/{id}` | Remove comando |
+| Tarefas | GET | `/api/tarefas` | Lista tarefas |
+| Tarefas | POST | `/api/tarefas` | Cria tarefa |
+| Tarefas | GET | `/api/tarefas/{id}` | Busca tarefa |
+| Tarefas | PUT | `/api/tarefas/{id}` | Atualiza tarefa |
+| Tarefas | DELETE | `/api/tarefas/{id}` | Remove tarefa |
+| Responsáveis | GET | `/api/responsible` | Lista responsáveis |
+| Responsáveis | POST | `/api/responsible` | Cria responsável |
+| Responsáveis | GET | `/api/responsible/{id}` | Busca responsável |
+| Responsáveis | PUT | `/api/responsible/{id}` | Atualiza responsável |
+| Responsáveis | DELETE | `/api/responsible/{id}` | Remove responsável |
+| Interações de Agente | GET | `/api/agent-interactions` | Lista interações |
+| Interações de Agente | POST | `/api/agent-interactions` | Cria interação |
+| Interações de Agente | GET | `/api/agent-interactions/{id}` | Busca interação |
+| Interações de Agente | PUT | `/api/agent-interactions/{id}` | Atualiza interação |
+| Interações de Agente | DELETE | `/api/agent-interactions/{id}` | Remove interação |
+| Agentes de IA | GET | `/api/ai-agents` | Lista agentes |
+| Agentes de IA | POST | `/api/ai-agents` | Cria agente |
+| Agentes de IA | GET | `/api/ai-agents/{id}` | Busca agente |
+| Agentes de IA | PUT | `/api/ai-agents/{id}` | Atualiza agente |
+| Agentes de IA | DELETE | `/api/ai-agents/{id}` | Remove agente |
+| Agentes de IA | GET | `/api/ai-agents/active` | Lista agentes ativos |
+| Agentes de IA | POST | `/api/ai-agents/{agentId}/users/{userId}/voice-command` | Processa comando de voz |
+| Agentes de IA | POST | `/api/ai-agents/{agentId}/users/{userId}/analyze-layout` | Analisa layout |
+| Agentes de IA | POST | `/api/ai-agents/{agentId}/users/{userId}/adapt-layout` | Adapta layout |
+| Agentes de IA | POST | `/api/ai-agents/{agentId}/users/{userId}/generate-subtitle` | Gera legendas |
+| Agentes de IA | POST | `/api/ai-agents/{agentId}/users/{userId}/describe-image` | Descreve imagem |
+| Agentes de IA | POST | `/api/ai-agents/{agentId}/users/{userId}/automate-task` | Automatiza tarefa |
+| Agentes de IA | PUT | `/api/ai-agents/{agentId}/model` | Atualiza modelo IA |
+| Agentes de IA | POST | `/api/ai-agents/{agentId}/train` | Treina modelo IA |
 
-*Para cada recurso, o padrão CRUD é aplicado:
-- GET / - Lista (com paginação)
-- POST / - Cria
-- GET /{id} - Busca
-- PUT /{id} - Atualiza
-- DELETE /{id} - Remove
+> Todos os endpoints protegidos requerem o header `Authorization: Bearer <token>`.
 
-## Integração com o Front-End
+## Paginação
+Listagens aceitam os parâmetros query `page` (0-based) e `size` (default 10).
 
-### Autenticação
-1. O front-end deve primeiro obter um token JWT através do endpoint de login
-2. Todas as requisições subsequentes para endpoints protegidos devem incluir o token no header Authorization
+## Integração com Front-End
+1. Execute o login e armazene o JWT em *local storage* ou *cookie seguro*.
+2. Configure um *interceptor* para adicionar o header `Authorization` a cada chamada.
+3. Use as rotas públicas (`/api/auth/**`) sem token.
+4. Utilize a documentação Swagger para testar e descobrir novos endpoints.
 
-### CORS
-- A API está configurada para aceitar requisições do front-end rodando em localhost:3000
-- A configuração CORS está implementada na classe WebConfig.java
-
-### Exemplo de Uso
-```bash
-# 1. Login e obtenção do token
-TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login \
-  -H 'Content-Type: application/json' \
-  -d '{"email":"admin@ex.com","password":"senha123"}' \
-  | jq -r .token)
-
-# 2. Exemplo de requisição autenticada
-curl -X GET http://localhost:8080/api/users?page=0&size=5 \
-  -H "Authorization: Bearer $TOKEN"
-```
+## Boas Práticas & Convenções
+* Utilize DTOs definidos no projeto para comunicação entre camadas.  
+* Validações são feitas via *Bean Validation* – campos inválidos retornam **HTTP 400**.  
+* Respostas de erro seguem o padrão JSON com `timestamp`, `status`, `error` e `message`.  
+* Os mapeamentos seguem a convenção REST (`/api/<recurso>`).  
+* Ao contribuir, siga o guia de estilo do **Google Java Format**.
 
 
